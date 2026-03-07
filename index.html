@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <title>阿鱼的生日惊喜 💜</title>
+        <link href="css/main.min.css" rel="stylesheet" type="text/css">
+        <link rel="Shortcut Icon" href="favicon.ico"/>
+    </head>
+    <body>
+        <!-- 开场白弹窗 -->
+        <div id="welcome-modal" class="welcome-modal show">
+            <div class="welcome-content">
+                <div class="heart-decoration">💜</div>
+                <h2>给最爱的阿鱼</h2>
+                <p>今天是 3 月 14 日<br>白色情人节，也是你的生日<br>俺有一份特别的礼物想送给你 💕</p>
+                <button class="start-btn" onclick="startJourney()">开启惊喜 ✨</button>
+            </div>
+        </div>
+
+        <!-- 落叶容器 -->
+        <div class="leaves-container" id="leaves-container"></div>
+
+        <div id="mobile" :class="{ 'has-prompt': hasPrompt }">
+            <div id="mobile-head">
+                <div id="mobile-head-title">💜 大煞笔与阿鱼聊天中 💜</div>
+            </div>
+            <div id="mobile-body">
+                <div id="mobile-body-bg"></div>
+                <div id="mobile-body-content">
+                    <div id="mock-msg-row" class="msg-row">
+                        <div id="mock-msg" class="msg" v-html="latestMsgContent"></div>
+                    </div>
+                    <div class="msg-row"
+                        v-for="(msg, index) in messages"
+                        :key="index"
+                        :class="msg.author === 'author' ? 'msg-author' : 'msg-me'">
+                        <div class="msg"
+                            :class="'msg-bounce-in-' + (msg.author === 'author' ? 'left': 'right')"
+                            :style="msg.width && msg.height && {width: msg.width - 26 + 'px', height: msg.height - 18 + 'px'}"
+                            v-html="msg.content"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="mobile-foot">
+                <div id="prompt">
+                    <div id="prompt-head">
+                        <div class="say-something" v-if="!isFinished">阿鱼想说什么呢？</div>
+                        <div class="say-something" v-if="isFinished">💜 对话已结束 💜</div>
+                        <a href="javascript:;" class="close-btn"
+                            v-on:click="togglePrompt(false)"></a>
+                    </div>
+                    <div id="prompt-body">
+                        <!-- 正常对话中的选项 -->
+                        <ul class="responses" v-if="lastDialog && lastDialog.responses && lastDialog.responses.length > 0 && !isFinished">
+                            <li v-for="res in lastDialog.responses">
+                                <a href="javascript:;" v-on:click="respond(res)">{{ res.content }}</a>
+                            </li>
+                        </ul>
+                        <!-- 对话结束后的选项 -->
+                        <div class="finished-options" v-if="isFinished">
+                            <ul class="responses">
+                                <li>
+                                    <a href="javascript:;" v-on:click="restartDialog()">💕 再听一遍</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" onclick="alert('李建卫永远爱你！💜 所以啥时候结婚？')">💝 我也爱你</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- 没有选项时的提示 -->
+                        <div class="waiting-msg" v-if="!isFinished && isTyping">
+                            <p style="text-align: center; color: #d478b1; padding: 20px;">大煞笔正在输入中...</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="input-hint" class="say-something"
+                    v-on:click="togglePrompt(true)"
+                    :class="{'clickable': !isTyping && hasOptions }">
+                    <span v-if="!isTyping && !isFinished && hasOptions">点击这里选择回复 💕</span>
+                    <span v-if="isTyping">大煞笔正在输入中 💕</span>
+                    <span v-if="isFinished && !isTyping">💜 点击这里选择 💜</span>
+                    <span v-if="!isTyping && !isFinished && !hasOptions">请等待...</span>
+                </div>
+            </div>
+            <div id="prompt-bg" v-on:click="togglePrompt(false)"></div>
+        </div>
+
+        <script src="//cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
+        <script src="//cdn.bootcss.com/vue/2.2.6/vue.min.js"></script>
+
+        <script src="js/index.js?v=20260307"></script>
+        
+        <script>
+            // 重要日期配置（请根据实际情况修改！！！）
+            const IMPORTANT_DATES = {
+                // 出生日期
+                ayuBirth: new Date('2007-04-24'),  // 阿鱼出生：2007 年 4 月 24 日 ✅
+                myBirth: new Date('2002-06-21'),    // 我的出生：2002 年 6 月 21 日 ✅
+                
+                // 相识纪念日
+                firstMeet: new Date('2025-06-12'),  // 初次相见：2025 年 6 月 12 日 ✅
+                wechat: new Date('2025-06-16'),     // 加微信：2025 年 6 月 16 日 ✅
+                couple: new Date('2025-06-30'),     // 情侣标：2025 年 6 月 30 日 ✅
+                firstDate: new Date('2025-07-29'),  // 第一次见面：2025 年 7 月 29 日 ✅
+                confession: new Date('2025-06-28'), // 小作文表白：2025 年 6 月 28 日 ✅
+                loveStart: new Date('2025-06-25'),  // 恋爱开始：2025 年 6 月 25 日 ✅（她查分那天）
+                
+                // 特殊事件
+                jealous: new Date('2025-10-22'),    // 涵钰吃醋了：2025 年 10 月 22 日 ✅
+                period: new Date('2025-08-12'),     // 姨妈超级疼：2025 年 8 月 12 日 ✅
+                love100days: new Date('2025-10-03'), // 恋爱 100 天（自动计算，不用改）
+                
+                // 生日
+                ayuBirthday: new Date(new Date().getFullYear(), 2, 14) // 阿鱼的生日：每年 3 月 14 日（自动计算今年）
+            };
+
+            // 计算两个日期之间的天数差
+            function daysBetween(date1, date2) {
+                const oneDay = 24 * 60 * 60 * 1000;
+                return Math.round((date2 - date1) / oneDay);
+            }
+
+            // 计算倒数日
+            function countDownDays(targetDate) {
+                const now = new Date();
+                return daysBetween(now, targetDate);
+            }
+
+            // 计算已经过去的天数
+            function daysSince(startDate) {
+                const now = new Date();
+                return daysBetween(startDate, now);
+            }
+
+            // 格式化日期显示
+            function formatDate(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}年${month}月${day}日`;
+            }
+
+            // 获取动态倒数日内容
+            function getDynamicCountdownContent() {
+                const today = new Date();
+                const todayStr = `${today.getMonth() + 1}月${today.getDate()}号`;
+                const currentMonth = today.getMonth(); // 0-11
+                const currentDay = today.getDate(); // 1-31
+                
+                // 检查是否是生日当天（3 月 14 日）
+                const isBirthday = (currentMonth === 2 && currentDay === 14); // 3 月是索引 2
+                
+                // 距离生日的天数
+                const daysToBirthday = countDownDays(IMPORTANT_DATES.ayuBirthday);
+                
+                // 即将到来的纪念日
+                const love300daysDate = new Date(IMPORTANT_DATES.loveStart.getTime() + 300 * 24 * 60 * 60 * 1000);
+                const love1yearDate = new Date(IMPORTANT_DATES.loveStart.getTime() + 365 * 24 * 60 * 60 * 1000);
+                const meet1yearDate = new Date(IMPORTANT_DATES.firstMeet.getTime() + 365 * 24 * 60 * 60 * 1000);
+                
+                const daysTo300days = countDownDays(love300daysDate);
+                const daysTo1year = countDownDays(love1yearDate);
+                const daysToMeet1year = countDownDays(meet1yearDate);
+                
+                // 已经过去的纪念日
+                const love100daysDate = new Date(IMPORTANT_DATES.loveStart.getTime() + 100 * 24 * 60 * 60 * 1000);
+                
+                const daysSinceJealous = daysSince(IMPORTANT_DATES.jealous);
+                const daysSince100days = daysSince(love100daysDate);
+                const daysSincePeriod = daysSince(IMPORTANT_DATES.period);
+                const daysSinceMeet = daysSince(IMPORTANT_DATES.firstMeet);
+                
+                // 表白与相识
+                const daysSinceConfession = daysSince(IMPORTANT_DATES.confession);
+                const daysSinceLove = daysSince(IMPORTANT_DATES.loveStart);
+                const daysSinceKnow = daysSince(IMPORTANT_DATES.firstMeet);
+                
+                // 出生天数
+                const daysSinceAyuBirth = daysSince(IMPORTANT_DATES.ayuBirth);
+                const daysSinceMyBirth = daysSince(IMPORTANT_DATES.myBirth);
+
+                if (isBirthday) {
+                    // 生日当天的特殊显示
+                    return `<pre>🎂🎂🎂 生日快乐 我的阿鱼 🎂🎂🎂</pre>
+今天${todayStr} <span style="color: #ff69b4; font-weight: bold; font-size: 16px;">🎉 今天是你的生日！🎉</span>
+让我来记录一下我们的点点滴滴 💕
+
+<pre>⏳ 即将到来的纪念日</pre>
+� 和涵钰恋爱 300 天还有：${daysTo300days}天
+🎉 和涵钰恋爱 1 周年还有：${daysTo1year}天
+👫 初次相见 1 周年还有：${daysToMeet1year}天
+
+<pre>💝 已经过去的纪念日</pre>
+🥰 涵钰吃醋了已经：${daysSinceJealous}天
+💯 和涵钰恋爱 100 天已经：${daysSince100days}天
+😢 姨妈超级疼已经：${daysSincePeriod}天
+👀 初次相见已经：${daysSinceMeet}天
+
+<pre>💌 表白与相识</pre>
+📝 小作文表白已经：${daysSinceConfession}天
+💑 和涵钰恋爱已经：${daysSinceLove}天
+📱 和涵钰认识已经：${daysSinceKnow}天
+
+<pre>🎂 我们的出生</pre>
+👶 涵钰出生于${formatDate(IMPORTANT_DATES.ayuBirth)}
+👶 涵钰出生已经：${daysSinceAyuBirth}天
+👶 我出生已经：${daysSinceMyBirth}天
+
+<pre>✨ 生日快乐 我最爱的阿鱼 ✨</pre>
+<pre>💜 愿你永远开心 被爱包围 💜</pre>`;
+                } else {
+                    // 非生日当天的显示
+                    return `<pre>�� 我们的倒数日记录 📅</pre>
+今天${todayStr} 距离 314 生日还有${daysToBirthday}天 ✨
+让我来记录一下我们的点点滴滴 💕
+
+<pre>⏳ 即将到来的纪念日</pre>
+💕 和涵钰恋爱 300 天还有：${daysTo300days}天
+🎉 和涵钰恋爱 1 周年还有：${daysTo1year}天
+👫 初次相见 1 周年还有：${daysToMeet1year}天
+
+<pre>💝 已经过去的纪念日</pre>
+🥰 涵钰吃醋了已经：${daysSinceJealous}天
+💯 和涵钰恋爱 100 天已经：${daysSince100days}天
+😢 姨妈超级疼已经：${daysSincePeriod}天
+👀 初次相见已经：${daysSinceMeet}天
+
+<pre>💌 表白与相识</pre>
+📝 小作文表白已经：${daysSinceConfession}天
+💑 和涵钰恋爱已经：${daysSinceLove}天
+📱 和涵钰认识已经：${daysSinceKnow}天
+
+<pre>🎂 我们的出生</pre>
+👶 涵钰出生于${formatDate(IMPORTANT_DATES.ayuBirth)}
+👶 涵钰出生已经：${daysSinceAyuBirth}天
+👶 我出生已经：${daysSinceMyBirth}天
+
+<pre>✨ 每一个数字都是爱的证明 ✨</pre>`;
+                }
+            }
+
+            // 开场白控制
+            function startJourney() {
+                // 关闭弹窗
+                document.getElementById('welcome-modal').classList.remove('show');
+                
+                // 开始落叶动画
+                startFallingLeaves();
+                
+                // 等待 Vue 初始化完成后开始对话
+                var checkAndStart = function() {
+                    if (window.vm && window.vm.isInitialized) {
+                        // Vue 已初始化，开始对话
+                        if (window.vm.messages.length === 0) {
+                            window.vm.appendDialog('0000');
+                        }
+                    } else {
+                        // Vue 还未初始化，等待 100ms 后重试
+                        setTimeout(checkAndStart, 100);
+                    }
+                };
+                checkAndStart();
+            }
+            
+            // 落叶动画
+            function startFallingLeaves() {
+                const container = document.getElementById('leaves-container');
+                
+                function createLeaf() {
+                    const leaf = document.createElement('div');
+                    leaf.className = 'falling-leaf';
+                    
+                    // 随机位置
+                    leaf.style.left = Math.random() * 100 + '%';
+                    leaf.style.top = '-30px';
+                    
+                    // 随机大小
+                    const size = 15 + Math.random() * 15;
+                    leaf.style.width = size + 'px';
+                    leaf.style.height = size + 'px';
+                    
+                    // 随机动画时长
+                    const duration = 8 + Math.random() * 6;
+                    leaf.style.animationDuration = duration + 's';
+                    
+                    // 随机延迟
+                    leaf.style.animationDelay = Math.random() * 3 + 's';
+                    
+                    // 随机透明度
+                    leaf.style.opacity = 0.4 + Math.random() * 0.4;
+                    
+                    container.appendChild(leaf);
+                    
+                    // 动画结束后移除
+                    setTimeout(() => {
+                        if (leaf.parentNode) {
+                            leaf.parentNode.removeChild(leaf);
+                        }
+                    }, (duration + 3) * 1000);
+                }
+                
+                // 初始创建一些落叶
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(createLeaf, i * 800);
+                }
+                
+                // 持续创建落叶
+                setInterval(createLeaf, 2500);
+            }
+        </script>
+    </body>
+</html>

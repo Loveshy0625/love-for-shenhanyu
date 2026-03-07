@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <title>阿鱼的生日惊喜 💜</title>
+        <link href="css/main.min.css" rel="stylesheet" type="text/css">
+        <link rel="Shortcut Icon" href="favicon.ico"/>
+    </head>
+    <body>
+        <!-- 开场白弹窗 -->
+        <div id="welcome-modal" class="welcome-modal show">
+            <div class="welcome-content">
+                <div class="heart-decoration">💜</div>
+                <h2>给最爱的阿鱼</h2>
+                <p>今天是 3 月 14 日<br>白色情人节，也是你的生日<br>俺有一份特别的礼物想送给你 💕</p>
+                <button class="start-btn" onclick="startJourney()">开启惊喜 ✨</button>
+            </div>
+        </div>
+
+        <!-- 落叶容器 -->
+        <div class="leaves-container" id="leaves-container"></div>
+
+        <div id="mobile" :class="{ 'has-prompt': hasPrompt }">
+            <div id="mobile-head">
+                <div id="mobile-head-title">💜 大煞笔与阿鱼聊天中 💜</div>
+            </div>
+            <div id="mobile-body">
+                <div id="mobile-body-bg"></div>
+                <div id="mobile-body-content">
+                    <div id="mock-msg-row" class="msg-row">
+                        <div id="mock-msg" class="msg" v-html="latestMsgContent"></div>
+                    </div>
+                    <div class="msg-row"
+                        v-for="(msg, index) in messages"
+                        :key="index"
+                        :class="msg.author === 'author' ? 'msg-author' : 'msg-me'">
+                        <div class="msg"
+                            :class="'msg-bounce-in-' + (msg.author === 'author' ? 'left': 'right')"
+                            :style="msg.width && msg.height && {width: msg.width - 26 + 'px', height: msg.height - 18 + 'px'}"
+                            v-html="msg.content"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="mobile-foot">
+                <div id="prompt">
+                    <div id="prompt-head">
+                        <div class="say-something" v-if="!isFinished">阿鱼想说什么呢？</div>
+                        <div class="say-something" v-if="isFinished">💜 对话已结束 💜</div>
+                        <a href="javascript:;" class="close-btn"
+                            v-on:click="togglePrompt(false)"></a>
+                    </div>
+                    <div id="prompt-body">
+                        <!-- 正常对话中的选项 -->
+                        <ul class="responses" v-if="lastDialog && lastDialog.responses && lastDialog.responses.length > 0 && !isFinished">
+                            <li v-for="res in lastDialog.responses">
+                                <a href="javascript:;" v-on:click="respond(res)">{{ res.content }}</a>
+                            </li>
+                        </ul>
+                        <!-- 对话结束后的选项 -->
+                        <div class="finished-options" v-if="isFinished">
+                            <ul class="responses">
+                                <li>
+                                    <a href="javascript:;" v-on:click="restartDialog()">💕 再听一遍</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" onclick="alert('李建卫永远爱你！💜 所以啥时候结婚？')">💝 我也爱你</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- 没有选项时的提示 -->
+                        <div class="waiting-msg" v-if="!isFinished && isTyping">
+                            <p style="text-align: center; color: #d478b1; padding: 20px;">大煞笔正在输入中...</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="input-hint" class="say-something"
+                    v-on:click="togglePrompt(true)"
+                    :class="{'clickable': !isTyping && hasOptions }">
+                    <span v-if="!isTyping && !isFinished && hasOptions">点击这里选择回复 💕</span>
+                    <span v-if="isTyping">大煞笔正在输入中 💕</span>
+                    <span v-if="isFinished && !isTyping">💜 点击这里选择 💜</span>
+                    <span v-if="!isTyping && !isFinished && !hasOptions">请等待...</span>
+                </div>
+            </div>
+            <div id="prompt-bg" v-on:click="togglePrompt(false)"></div>
+        </div>
+
+        <script src="//cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
+        <script src="//cdn.bootcss.com/vue/2.2.6/vue.min.js"></script>
+
+        <script src="js/index.js?v=20260307"></script>
+        
+        <script>
+            // 开场白控制
+            function startJourney() {
+                // 关闭弹窗
+                document.getElementById('welcome-modal').classList.remove('show');
+                
+                // 开始落叶动画
+                startFallingLeaves();
+                
+                // 等待 Vue 初始化完成后开始对话
+                var checkAndStart = function() {
+                    if (window.vm && window.vm.isInitialized) {
+                        // Vue 已初始化，开始对话
+                        if (window.vm.messages.length === 0) {
+                            window.vm.appendDialog('0000');
+                        }
+                    } else {
+                        // Vue 还未初始化，等待 100ms 后重试
+                        setTimeout(checkAndStart, 100);
+                    }
+                };
+                checkAndStart();
+            }
+            
+            // 落叶动画
+            function startFallingLeaves() {
+                const container = document.getElementById('leaves-container');
+                
+                function createLeaf() {
+                    const leaf = document.createElement('div');
+                    leaf.className = 'falling-leaf';
+                    
+                    // 随机位置
+                    leaf.style.left = Math.random() * 100 + '%';
+                    leaf.style.top = '-30px';
+                    
+                    // 随机大小
+                    const size = 15 + Math.random() * 15;
+                    leaf.style.width = size + 'px';
+                    leaf.style.height = size + 'px';
+                    
+                    // 随机动画时长
+                    const duration = 8 + Math.random() * 6;
+                    leaf.style.animationDuration = duration + 's';
+                    
+                    // 随机延迟
+                    leaf.style.animationDelay = Math.random() * 3 + 's';
+                    
+                    // 随机透明度
+                    leaf.style.opacity = 0.4 + Math.random() * 0.4;
+                    
+                    container.appendChild(leaf);
+                    
+                    // 动画结束后移除
+                    setTimeout(() => {
+                        if (leaf.parentNode) {
+                            leaf.parentNode.removeChild(leaf);
+                        }
+                    }, (duration + 3) * 1000);
+                }
+                
+                // 初始创建一些落叶
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(createLeaf, i * 800);
+                }
+                
+                // 持续创建落叶
+                setInterval(createLeaf, 2500);
+            }
+        </script>
+    </body>
+</html>
