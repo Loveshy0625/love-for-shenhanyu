@@ -1,0 +1,87 @@
+{
+    "fromMe": [{
+        "id": "susu001",
+        "details": [
+            [
+                "🐰 To 申申酱：",
+                "也许我词不达意 但我很开心遇见你",
+                "遇到你是我最幸运的事",
+                "因为你总让我笑让我开心 💙",
+                "<img src='img/微信图片_20260307151253_717_16.jpg' style='max-width: 100%; border-radius: 10px; margin: 10px 0;'>"
+            ]
+        ],
+        "responses": [{
+            "content": "苏苏，我也很开心遇见你！💙",
+            "nextAuthor": ["susu002"]
+        }]
+    }, {
+        "id": "susu002",
+        "details": [
+            [
+                "在和你相处的时间里我很快乐",
+                "我也常常因为你而感动幸福",
+                "感谢你出现在我平凡的高中时期 🏫",
+                "<img src='img/微信图片_20260307155036_855_16.jpg' style='max-width: 100%; border-radius: 10px; margin: 10px 0;'>"
+            ]
+        ],
+        "responses": [{
+            "content": "谢谢你一直陪着我 🥺",
+            "nextAuthor": ["susu003"]
+        }]
+    }, {
+        "id": "susu003",
+        "details": [
+            [
+                "因为你的到来 让我的高中生活变得生动有趣",
+                "你的出现 就像白开水一样淡淡的日子里",
+                "偷偷地加了一颗糖 🍬",
+                "<img src='img/微信图片_20260307151517_722_16.jpg' style='max-width: 100%; border-radius: 10px; margin: 10px 0;'>"
+            ]
+        ],
+        "responses": [{
+            "content": "你也是我生命中最甜的那颗糖 💙",
+            "nextAuthor": ["susu004"]
+        }]
+    }, {
+        "id": "susu004",
+        "details": [
+            [
+                "我们经历了很多大大小小的事",
+                "有过激烈的争吵",
+                "有过为游戏胜利的喜悦",
+                "有过为对方遇到问题时的担忧……",
+                "<img src='img/微信图片_20260307151519_723_16.jpg' style='max-width: 100%; border-radius: 10px; margin: 10px 0;'>"
+            ]
+        ],
+        "responses": [{
+            "content": "那些回忆都很珍贵 💙",
+            "nextAuthor": ["susu005"]
+        }]
+    }, {
+        "id": "susu005",
+        "details": [
+            [
+                "从认识到相识 我们已经度过了 1002 天",
+                "有很多难以表达的话未开口",
+                "我很喜欢和你做闺蜜",
+                "喜欢和你在一起打闹 💙"
+            ]
+        ],
+        "responses": [{
+            "content": "我们要一直做好闺蜜！💙",
+            "nextAuthor": ["susu006"]
+        }]
+    }, {
+        "id": "susu006",
+        "details": [
+            [
+                "今天这个日子我就不煽情了",
+                "申涵钰生日快乐 🎂",
+                "我永远在你身旁",
+                "我们下半生会一直在一起",
+                "爱你的苏 BB 💙"
+            ]
+        ]
+    }],
+    "fromUser": []
+}

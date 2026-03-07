@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>💙 苏苏有话说 💙</title>
+    <link href="css/main.min.css" rel="stylesheet" type="text/css">
+    <style>
+        /* 覆盖成浅蓝色主题 */
+        body {
+            background: linear-gradient(135deg, #e8f6ff 0%, #9CD5FF 50%, #b8e1ff 100%) !important;
+            font-family: Lato, "Microsoft YaHei", sans-serif !important;
+        }
+        
+        #mobile-head-title {
+            color: #2E86C1 !important;
+        }
+        
+        #mobile-head {
+            background: linear-gradient(135deg, #e8f6ff 0%, #b8e1ff 100%) !important;
+        }
+        
+        #mobile-foot {
+            background: linear-gradient(135deg, #e8f6ff 0%, #b8e1ff 100%) !important;
+            border-top: 1px solid rgba(46, 134, 193, 0.2) !important;
+        }
+        
+        .say-something {
+            color: #2E86C1 !important;
+        }
+        
+        #input-hint.clickable:hover {
+            color: #1F618D !important;
+        }
+        
+        .msg-author .msg {
+            background: white !important;
+            border-left: 3px solid #5DADE2 !important;
+            color: #666 !important;
+            box-shadow: 5px 5px 15px 0 rgba(93, 173, 226, 0.15) !important;
+        }
+        
+        .msg-me .msg {
+            background: linear-gradient(135deg, #5DADE2 0%, #2E86C1 100%) !important;
+            box-shadow: 5px 5px 15px 0 rgba(46, 134, 193, 0.25) !important;
+            color: #666 !important;
+        }
+        
+        #prompt-head {
+            background: linear-gradient(135deg, #e8f6ff 0%, #b8e1ff 100%) !important;
+            border-bottom: 1px solid rgba(46, 134, 193, 0.2) !important;
+        }
+        
+        #prompt-head .say-something {
+            color: #2E86C1 !important;
+        }
+        
+        .close-btn:before, .close-btn:after {
+            background-color: #5DADE2 !important;
+        }
+        
+        #prompt-body {
+            background: linear-gradient(180deg, #ffffff 0%, #e8f6ff 100%) !important;
+        }
+        
+        #prompt-body .responses li {
+            border-bottom: 1px solid rgba(46, 134, 193, 0.15) !important;
+        }
+        
+        #prompt-body .responses li a {
+            color: #2E86C1 !important;
+        }
+        
+        #prompt-body .responses li a:hover {
+            background: rgba(46, 134, 193, 0.1) !important;
+            color: #1F618D !important;
+        }
+        
+        #mobile-body {
+            background: linear-gradient(180deg, #ffffff 0%, #e8f6ff 50%, #ffffff 100%) !important;
+        }
+        
+        #mobile-body a {
+            color: #2E86C1 !important;
+        }
+        
+        #mobile-body a:hover {
+            color: #1F618D !important;
+        }
+        
+        .msg pre {
+            color: #2E86C1 !important;
+            background: linear-gradient(135deg, rgba(93, 173, 226, 0.1) 0%, rgba(46, 134, 193, 0.1) 100%) !important;
+        }
+        
+        /* 苏苏特殊样式 */
+        .susu-avatar {
+            font-size: 24px;
+            margin-right: 5px;
+        }
+        
+        /* 蓝色小星星掉落动画 - 和主页面落叶逻辑一致 */
+        .falling-star {
+            position: fixed;
+            top: -30px;
+            font-size: 20px !important;
+            color: #5DADE2 !important;
+            -webkit-text-fill-color: #5DADE2 !important;
+            text-shadow: 0 0 5px rgba(93, 173, 226, 0.5);
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.6;
+            animation: starFall 10s linear forwards;
+            filter: drop-shadow(0 0 2px #5DADE2) !important;
+        }
+        
+        @keyframes starFall {
+            0% {
+                transform: translateY(-10px) rotate(0deg);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="mobile" :class="{ 'has-prompt': hasPrompt }">
+        <div id="mobile-head">
+            <div id="mobile-head-title">💙 苏苏有话说 💙</div>
+        </div>
+        <div id="mobile-body">
+            <div id="mobile-body-bg"></div>
+            <div id="mobile-body-content">
+                <div id="mock-msg-row" class="msg-row">
+                    <div id="mock-msg" class="msg" v-html="latestMsgContent"></div>
+                </div>
+                <div class="msg-row"
+                    v-for="(msg, index) in messages"
+                    :key="index"
+                    :class="msg.author === 'author' ? 'msg-author' : 'msg-me'">
+                    <div class="msg"
+                        :class="'msg-bounce-in-' + (msg.author === 'author' ? 'left': 'right')"
+                        :style="msg.width && msg.height && {width: msg.width - 26 + 'px', height: msg.height - 18 + 'px'}"
+                        v-html="msg.content"></div>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-foot">
+            <div id="prompt">
+                <div id="prompt-head">
+                    <div class="say-something" v-if="!isFinished">申申想说什么呢？🐇</div>
+                    <div class="say-something" v-if="isFinished">💙 已读完 💙</div>
+                    <a href="javascript:;" class="close-btn"
+                        v-on:click="togglePrompt(false)"></a>
+                </div>
+                <div id="prompt-body">
+                    <ul class="responses" v-if="lastDialog && lastDialog.responses && lastDialog.responses.length > 0 && !isFinished">
+                        <li v-for="res in lastDialog.responses">
+                            <a href="javascript:;" v-on:click="respond(res)">{{ res.content }}</a>
+                        </li>
+                    </ul>
+                    <div class="finished-options" v-if="isFinished">
+                        <ul class="responses">
+                            <li>
+                                <a href="javascript:;" v-on:click="restartDialog()">💙 再看一遍</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" onclick="window.close();"> 返回</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div id="input-hint" class="say-something"
+                v-on:click="togglePrompt(true)"
+                :class="{'clickable': !isTyping && hasOptions }">
+                <span v-if="!isTyping && !isFinished && hasOptions">点击这里选择回复 💙</span>
+                <span v-if="isTyping">苏苏正在输入中 💙</span>
+                <span v-if="isFinished && !isTyping">💙 点击这里选择 💙</span>
+                <span v-if="!isTyping && !isFinished && !hasOptions">请等待...</span>
+            </div>
+        </div>
+        <div id="prompt-bg" v-on:click="togglePrompt(false)"></div>
+    </div>
+
+    <script src="//cdn.bootcss.com/zepto/1.2.0/zepto.min.js"></script>
+    <script src="//cdn.bootcss.com/vue/2.2.6/vue.min.js"></script>
+
+    <script src="js/susu.js"></script>
+    
+    <script>
+        // 蓝色小星星掉落效果 - 和主页面落叶逻辑一致
+        function createFallingStar() {
+            var star = document.createElement('div');
+            star.className = 'falling-star';
+            // 使用 SVG 绘制蓝色星星
+            star.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"><path fill="#5DADE2" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
+            
+            // 随机位置
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = '-30px';
+            
+            // 随机大小
+            var size = 15 + Math.random() * 15;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            
+            // 随机动画时长 (8-14 秒，和主页面一样)
+            var duration = 8 + Math.random() * 6;
+            star.style.animationDuration = duration + 's';
+            
+            // 随机延迟
+            star.style.animationDelay = Math.random() * 3 + 's';
+            
+            // 随机透明度
+            star.style.opacity = 0.4 + Math.random() * 0.4;
+            
+            document.body.appendChild(star);
+            
+            // 动画结束后移除 (和主页面一样)
+            setTimeout(function() {
+                if (star.parentNode) {
+                    star.parentNode.removeChild(star);
+                }
+            }, (duration + 3) * 1000);
+        }
+        
+        // 初始创建一些星星 (和主页面一样)
+        for (var i = 0; i < 5; i++) {
+            setTimeout(createFallingStar, i * 800);
+        }
+        
+        // 持续创建星星 (2.5 秒一个，和主页面一样)
+        setInterval(createFallingStar, 2500);
+    </script>
+</body>
+</html>
