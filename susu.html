@@ -201,20 +201,31 @@
         document.addEventListener('DOMContentLoaded', function() {
             const audio = document.getElementById('bg-music');
             
-            // 尝试自动播放
+            // 尝试播放音频的函数
             function playAudio() {
                 audio.play().catch(function(error) {
                     console.log('自动播放被阻止:', error);
-                    // 自动播放被阻止时，等待用户交互后再播放
-                    document.addEventListener('click', function playOnClick() {
-                        audio.play();
-                        document.removeEventListener('click', playOnClick);
-                    }, { once: true });
                 });
             }
             
             // 初始尝试播放
             playAudio();
+            
+            // 添加多种用户交互事件监听器，确保在移动设备上也能触发播放
+            function handleUserInteraction() {
+                playAudio();
+                // 移除所有事件监听器，避免重复触发
+                document.removeEventListener('click', handleUserInteraction);
+                document.removeEventListener('touchstart', handleUserInteraction);
+                document.removeEventListener('touchend', handleUserInteraction);
+                document.removeEventListener('touchmove', handleUserInteraction);
+            }
+            
+            // 添加多种事件监听器，覆盖不同设备和交互方式
+            document.addEventListener('click', handleUserInteraction, { once: true });
+            document.addEventListener('touchstart', handleUserInteraction, { once: true });
+            document.addEventListener('touchend', handleUserInteraction, { once: true });
+            document.addEventListener('touchmove', handleUserInteraction, { once: true });
         });
         
         // 蓝色小星星掉落效果 - 和主页面落叶逻辑一致
