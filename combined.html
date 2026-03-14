@@ -31,7 +31,7 @@
         }
         
         .theme-btn {
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
             border-radius: 25px;
             font-size: 14px;
@@ -39,6 +39,8 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            white-space: nowrap;
+            display: inline-block;
         }
         
         .theme-btn.li {
@@ -1140,6 +1142,10 @@
                                 // 可以设置一个默认的错误图片
                                 // this.src = 'img/default.jpg';
                             });
+                            // 添加缓存控制参数，强制刷新图片
+                            if (target.src && !target.src.includes('?v=')) {
+                                target.src = target.src + '?v=' + new Date().getTime();
+                            }
                             target.complete && $(target).trigger('load');
                         });
                     });
