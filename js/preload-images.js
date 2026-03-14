@@ -47,7 +47,22 @@
         'img/微信图片_20260307173702_82_13.jpg',
         'img/微信图片_20260307173702_83_13.jpg',
         'img/微信图片_20260307173702_84_13.jpg',
-        'img/微信图片_影院.jpg'
+        'img/微信图片_影院.jpg',
+        
+        // 苏苏相关图片
+        'img/影院.jpg',
+        'img/出cos.jpg',
+        'img/loopy.jpg',
+        'img/五条悟.jpg',
+        'img/石膏手作.jpg',
+        'img/第五人格.jpg',
+        'img/窝房间.jpg',
+        'img/骑车.jpg',
+        'img/狗狗.jpg',
+        'img/高中.jpg',
+        'img/苏苏和申.jpg',
+        'img/苏苏和申申.jpg',
+        'img/申和苏苏.jpg'
     ];
 
     var loadedCount = 0;
