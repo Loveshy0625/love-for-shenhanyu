@@ -49,6 +49,9 @@
         'img/窝房间.jpg',
         'img/骑车.jpg',
         'img/狗狗.jpg',
+        'img/高中.jpg',
+        'img/国庆节.jpg',
+        'img/国庆节副本.jpg',
 
         'img/苏苏和申.jpg',
         'img/苏苏和申申.jpg',
