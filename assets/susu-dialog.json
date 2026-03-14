@@ -77,10 +77,23 @@
                 "希望我们能有属于我们自己的狗狗🐶",
                 "<img src='img/狗狗.jpg' style='max-width: 100%; border-radius: 10px; margin: 10px 0;'>",
                 "我喜欢去你家玩，我们可以骑车到处去玩，逛夜市，在人少的马路上飙车（其实没那么快）",
-                "<img src='img/骑车.jpg' style='max-width: 100%; border-radius: 10px; margin: 10px 0;'>",
+                "<img src='img/骑车.jpg' style='max-width: 100%; border-radius: 10px; margin: 10px 0;'>"
+            ]
+        ],
+        "responses": [{
+            "content": "我也超想和你一起养狗狗！🐶",
+            "nextAuthor": ["susu007"]
+        }, {
+            "content": "骑车逛夜市真的很开心！✨",
+            "nextAuthor": ["susu007"]
+        }]
+    }, {
+        "id": "susu007",
+        "details": [
+            [
                 "我们第一次一起出cos，真是太青涩了。当初看觉得还不错，现在看的话，妆都没了。我真的好期待好期待今年的五一啊，好期待",
                 "<img src='img/出cos.jpg' style='max-width: 100%; border-radius: 10px; margin: 10px 0;'>",
-                "我见你的时候就觉得你很像loopy，太萌了太可爱了。我就给你做了loopy表情包[猪头]，跟你一模一样，呆呆的还有可爱的门牙",
+                "我见你的时候就觉得你很像loopy，太萌了太可爱了。我就给你做了loopy表情包🐖，跟你一模一样，呆呆的还有可爱的门牙",
                 "<img src='img/loopy.jpg' style='max-width: 100%; border-radius: 10px; margin: 10px 0;'>",
                 "你总说因为门牙而自卑，可是在别人眼中就是另外一番风味",
                 "<img src='img/苏苏和申.jpg' style='max-width: 100%; border-radius: 10px; margin: 10px 0;'>",
@@ -99,7 +112,20 @@
                 "你第一次去我家里住，咱俩晚上买了零食就窝在房间里看《战至巅峰》嘿嘿嘿。我靠，当时那个鸭翅根太好吃了！！早知道当时就多买点了！！🤤",
                 "<img src='img/窝房间.jpg' style='max-width: 100%; border-radius: 10px; margin: 10px 0;'>",
                 "我们还一起去过影院，那些回忆都很美好",
-                "<img src='img/影院.jpg' style='max-width: 100%; border-radius: 10px; margin: 10px 0;'>",
+                "<img src='img/影院.jpg' style='max-width: 100%; border-radius: 10px; margin: 10px 0;'>"
+            ]
+        ],
+        "responses": [{
+            "content": "cosplay的回忆真的好青涩啊！😂",
+            "nextAuthor": ["susu008"]
+        }, {
+            "content": "五一假期我们一定要好好玩！🎉",
+            "nextAuthor": ["susu008"]
+        }]
+    }, {
+        "id": "susu008",
+        "details": [
+            [
                 "今天这个日子我就不煽情了",
                 "申涵钰生日快乐 🎂",
                 "我永远在你身旁",
