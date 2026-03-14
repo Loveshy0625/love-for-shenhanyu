@@ -228,19 +228,19 @@
             background: linear-gradient(135deg, rgba(93, 173, 226, 0.1) 0%, rgba(46, 134, 193, 0.1) 100%) !important;
         }
         
-        /* 落叶动画 */
+        /* 粉色爱心动画 */
         .falling-leaf {
             position: fixed;
             top: -30px;
             font-size: 20px !important;
-            color: #d478b1 !important;
-            -webkit-text-fill-color: #d478b1 !important;
-            text-shadow: 0 0 5px rgba(212, 120, 177, 0.5);
+            color: #ff69b4 !important;
+            -webkit-text-fill-color: #ff69b4 !important;
+            text-shadow: 0 0 5px rgba(255, 105, 180, 0.5);
             z-index: 9999;
             pointer-events: none;
             opacity: 0.6;
             animation: leafFall 10s linear forwards;
-            filter: drop-shadow(0 0 2px #d478b1) !important;
+            filter: drop-shadow(0 0 2px #ff69b4) !important;
         }
         
         @keyframes leafFall {
@@ -663,7 +663,7 @@
                 
                 if (type === 'leaves') {
                     element.className = 'falling-leaf';
-                    element.innerHTML = '🍃';
+                    element.innerHTML = '💜';
                 } else if (type === 'stars') {
                     element.className = 'falling-star';
                     element.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"><path fill="#5DADE2" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
