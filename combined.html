@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>阿鱼的生日惊喜 💜</title>
+    <link href="css/main.min.css" rel="stylesheet" type="text/css">
+    <link rel="Shortcut Icon" href="favicon.ico"/>
+    <style>
+        /* 主页面样式 */
+        body {
+            font-family: Lato, "Microsoft YaHei", sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        /* 主题切换器 */
+        .theme-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .theme-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .theme-btn.li {
+            background: linear-gradient(135deg, #d478b1 0%, #ff69b4 50%, #d478b1 100%);
+            color: white;
+        }
+        
+        .theme-btn.susu {
+            background: linear-gradient(135deg, #5DADE2 0%, #2E86C1 50%, #5DADE2 100%);
+            color: white;
+        }
+        
+        .theme-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* 李的主题 */
+        .theme-li body {
+            background: linear-gradient(135deg, #f5e6f0 0%, #d478b1 50%, #f5e6f0 100%);
+        }
+        
+        .theme-li #mobile-head-title {
+            color: #d478b1 !important;
+        }
+        
+        .theme-li #mobile-head {
+            background: linear-gradient(135deg, #f5e6f0 0%, #ffd6ec 100%) !important;
+        }
+        
+        .theme-li #mobile-foot {
+            background: linear-gradient(135deg, #f5e6f0 0%, #ffd6ec 100%) !important;
+            border-top: 1px solid rgba(212, 120, 177, 0.2) !important;
+        }
+        
+        .theme-li .say-something {
+            color: #d478b1 !important;
+        }
+        
+        .theme-li #input-hint.clickable:hover {
+            color: #b84c97 !important;
+        }
+        
+        .theme-li .msg-author .msg {
+            background: white !important;
+            border-left: 3px solid #d478b1 !important;
+            color: #666 !important;
+            box-shadow: 5px 5px 15px 0 rgba(212, 120, 177, 0.15) !important;
+        }
+        
+        .theme-li .msg-me .msg {
+            background: linear-gradient(135deg, #d478b1 0%, #ff69b4 100%) !important;
+            box-shadow: 5px 5px 15px 0 rgba(212, 120, 177, 0.25) !important;
+            color: #666 !important;
+        }
+        
+        .theme-li #prompt-head {
+            background: linear-gradient(135deg, #f5e6f0 0%, #ffd6ec 100%) !important;
+            border-bottom: 1px solid rgba(212, 120, 177, 0.2) !important;
+        }
+        
+        .theme-li #prompt-head .say-something {
+            color: #d478b1 !important;
+        }
+        
+        .theme-li .close-btn:before, .theme-li .close-btn:after {
+            background-color: #d478b1 !important;
+        }
+        
+        .theme-li #prompt-body {
+            background: linear-gradient(180deg, #ffffff 0%, #f5e6f0 100%) !important;
+        }
+        
+        .theme-li #prompt-body .responses li {
+            border-bottom: 1px solid rgba(212, 120, 177, 0.15) !important;
+        }
+        
+        .theme-li #prompt-body .responses li a {
+            color: #d478b1 !important;
+        }
+        
+        .theme-li #prompt-body .responses li a:hover {
+            background: rgba(212, 120, 177, 0.1) !important;
+            color: #b84c97 !important;
+        }
+        
+        .theme-li #mobile-body {
+            background: linear-gradient(180deg, #ffffff 0%, #f5e6f0 50%, #ffffff 100%) !important;
+        }
+        
+        .theme-li #mobile-body a {
+            color: #d478b1 !important;
+        }
+        
+        .theme-li #mobile-body a:hover {
+            color: #b84c97 !important;
+        }
+        
+        .theme-li .msg pre {
+            color: #d478b1 !important;
+            background: linear-gradient(135deg, rgba(212, 120, 177, 0.1) 0%, rgba(212, 120, 177, 0.1) 100%) !important;
+        }
+        
+        /* 苏苏的主题 */
+        .theme-susu body {
+            background: linear-gradient(135deg, #e8f6ff 0%, #9CD5FF 50%, #b8e1ff 100%);
+        }
+        
+        .theme-susu #mobile-head-title {
+            color: #2E86C1 !important;
+        }
+        
+        .theme-susu #mobile-head {
+            background: linear-gradient(135deg, #e8f6ff 0%, #b8e1ff 100%) !important;
+        }
+        
+        .theme-susu #mobile-foot {
+            background: linear-gradient(135deg, #e8f6ff 0%, #b8e1ff 100%) !important;
+            border-top: 1px solid rgba(46, 134, 193, 0.2) !important;
+        }
+        
+        .theme-susu .say-something {
+            color: #2E86C1 !important;
+        }
+        
+        .theme-susu #input-hint.clickable:hover {
+            color: #1F618D !important;
+        }
+        
+        .theme-susu .msg-author .msg {
+            background: white !important;
+            border-left: 3px solid #5DADE2 !important;
+            color: #666 !important;
+            box-shadow: 5px 5px 15px 0 rgba(93, 173, 226, 0.15) !important;
+        }
+        
+        .theme-susu .msg-me .msg {
+            background: linear-gradient(135deg, #5DADE2 0%, #2E86C1 100%) !important;
+            box-shadow: 5px 5px 15px 0 rgba(46, 134, 193, 0.25) !important;
+            color: #666 !important;
+        }
+        
+        .theme-susu #prompt-head {
+            background: linear-gradient(135deg, #e8f6ff 0%, #b8e1ff 100%) !important;
+            border-bottom: 1px solid rgba(46, 134, 193, 0.2) !important;
+        }
+        
+        .theme-susu #prompt-head .say-something {
+            color: #2E86C1 !important;
+        }
+        
+        .theme-susu .close-btn:before, .theme-susu .close-btn:after {
+            background-color: #5DADE2 !important;
+        }
+        
+        .theme-susu #prompt-body {
+            background: linear-gradient(180deg, #ffffff 0%, #e8f6ff 100%) !important;
+        }
+        
+        .theme-susu #prompt-body .responses li {
+            border-bottom: 1px solid rgba(46, 134, 193, 0.15) !important;
+        }
+        
+        .theme-susu #prompt-body .responses li a {
+            color: #2E86C1 !important;
+        }
+        
+        .theme-susu #prompt-body .responses li a:hover {
+            background: rgba(46, 134, 193, 0.1) !important;
+            color: #1F618D !important;
+        }
+        
+        .theme-susu #mobile-body {
+            background: linear-gradient(180deg, #ffffff 0%, #e8f6ff 50%, #ffffff 100%) !important;
+        }
+        
+        .theme-susu #mobile-body a {
+            color: #2E86C1 !important;
+        }
+        
+        .theme-susu #mobile-body a:hover {
+            color: #1F618D !important;
+        }
+        
+        .theme-susu .msg pre {
+            color: #2E86C1 !important;
+            background: linear-gradient(135deg, rgba(93, 173, 226, 0.1) 0%, rgba(46, 134, 193, 0.1) 100%) !important;
+        }
+        
+        /* 落叶动画 */
+        .falling-leaf {
+            position: fixed;
+            top: -30px;
+            font-size: 20px !important;
+            color: #d478b1 !important;
+            -webkit-text-fill-color: #d478b1 !important;
+            text-shadow: 0 0 5px rgba(212, 120, 177, 0.5);
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.6;
+            animation: leafFall 10s linear forwards;
+            filter: drop-shadow(0 0 2px #d478b1) !important;
+        }
+        
+        @keyframes leafFall {
+            0% {
+                transform: translateY(-10px) rotate(0deg);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* 蓝色小星星掉落动画 */
+        .falling-star {
+            position: fixed;
+            top: -30px;
+            font-size: 20px !important;
+            color: #5DADE2 !important;
+            -webkit-text-fill-color: #5DADE2 !important;
+            text-shadow: 0 0 5px rgba(93, 173, 226, 0.5);
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.6;
+            animation: starFall 10s linear forwards;
+            filter: drop-shadow(0 0 2px #5DADE2) !important;
+        }
+        
+        @keyframes starFall {
+            0% {
+                transform: translateY(-10px) rotate(0deg);
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* 开场白弹窗 */
+        .welcome-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .welcome-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .welcome-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .heart-decoration {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .welcome-content h2 {
+            color: #d478b1;
+            margin-bottom: 20px;
+        }
+        
+        .welcome-content p {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .start-btn {
+            background: linear-gradient(135deg, #d478b1 0%, #ff69b4 50%, #d478b1 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(212, 120, 177, 0.4);
+        }
+    </style>
+</head>
+<body class="theme-li">
+    <!-- 主题切换器 -->
+    <div class="theme-switcher">
+        <button class="theme-btn li" onclick="switchTheme('li')">💜 李</button>
+        <button class="theme-btn susu" onclick="switchTheme('susu')">💙 苏苏</button>
+    </div>
+
+    <!-- 开场白弹窗 -->
+    <div id="welcome-modal" class="welcome-modal show">
+        <div class="welcome-content">
+            <div class="heart-decoration">💜</div>
+            <h2>给最爱的阿鱼</h2>
+            <p>今天是 3 月 14 日<br>白色情人节，也是你的生日<br>俺有一份特别的礼物想送给你 💕</p>
+            <button class="start-btn" onclick="startJourney()">开启惊喜 ✨</button>
+        </div>
+    </div>
+
+    <!-- 动画容器 -->
+    <div class="animation-container" id="animation-container"></div>
+
+    <div id="mobile" :class="{ 'has-prompt': hasPrompt }">
+        <div id="mobile-head">
+            <div id="mobile-head-title" v-html="pageTitle"></div>
+        </div>
+        <div id="mobile-body">
+            <div id="mobile-body-bg"></div>
+            <div id="mobile-body-content">
+                <div id="mock-msg-row" class="msg-row">
+                    <div id="mock-msg" class="msg" v-html="latestMsgContent"></div>
+                </div>
+                <div class="msg-row"
+                    v-for="(msg, index) in messages"
+                    :key="index"
+                    :class="msg.author === 'author' ? 'msg-author' : 'msg-me'">
+                    <div class="msg"
+                        :class="'msg-bounce-in-' + (msg.author === 'author' ? 'left': 'right')"
+                        :style="msg.width && msg.height && {width: msg.width - 26 + 'px', height: msg.height - 18 + 'px'}"
+                        v-html="msg.content"></div>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-foot">
+            <div id="prompt">
+                <div id="prompt-head">
+                    <div class="say-something" v-if="!isFinished">{{ promptTitle }}</div>
+                    <div class="say-something" v-if="isFinished">{{ finishedTitle }}</div>
+                    <a href="javascript:;" class="close-btn"
+                        v-on:click="togglePrompt(false)"></a>
+                </div>
+                <div id="prompt-body">
+                    <ul class="responses" v-if="lastDialog && lastDialog.responses && lastDialog.responses.length > 0 && !isFinished">
+                        <li v-for="res in lastDialog.responses">
+                            <a href="javascript:;" v-on:click="respond(res)">{{ res.content }}</a>
+                        </li>
+                    </ul>
+                    <div class="finished-options" v-if="isFinished">
+                        <ul class="responses">
+                            <li>
+                                <a href="javascript:;" v-on:click="restartDialog()">{{ restartText }}</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" onclick="switchTheme(currentTheme === 'li' ? 'susu' : 'li')">切换到{{ currentTheme === 'li' ? '苏苏' : '李' }}的话</a>
+                            </li>
+                            <li v-if="currentTheme === 'li'">
+                                <a href="javascript:;" onclick="alert('李建卫永远爱你！💜 所以啥时候结婚？')">💝 我也爱你</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="waiting-msg" v-if="!isFinished && isTyping">
+                        <p style="text-align: center; color: #d478b1; padding: 20px;">{{ typingText }}</p>
+                    </div>
+                </div>
+            </div>
+            <div id="input-hint" class="say-something"
+                v-on:click="togglePrompt(true)"
+                :class="{'clickable': !isTyping && hasOptions }">
+                <span v-if="!isTyping && !isFinished && hasOptions">{{ inputHintText }}</span>
+                <span v-if="isTyping">{{ typingText }}</span>
+                <span v-if="isFinished && !isTyping">{{ finishedHintText }}</span>
+                <span v-if="!isTyping && !isFinished && !hasOptions">请等待...</span>
+            </div>
+        </div>
+        <div id="prompt-bg" v-on:click="togglePrompt(false)"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/zepto@1.2.0/dist/zepto.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.2.6/dist/vue.min.js"></script>
+
+    <!-- 照片预加载脚本 -->
+    <script src="js/preload-images.js"></script>
+
+    <!-- 背景音乐 -->
+    <audio id="bg-music" loop>
+        <source src="music/李的背景音乐.mp3" type="audio/mpeg">
+     </audio>
+
+    <script>
+        // 当前主题
+        let currentTheme = 'li';
+        let currentAudio = document.getElementById('bg-music');
+        let animationInterval;
+        
+        // 主题配置
+        const themeConfig = {
+            li: {
+                title: '💜 大煞笔与阿鱼聊天中 💜',
+                promptTitle: '阿鱼想说什么呢？',
+                finishedTitle: '💜 对话已结束 💜',
+                restartText: '💕 再听一遍',
+                typingText: '大煞笔正在输入中 💕',
+                inputHintText: '点击这里选择回复 💕',
+                finishedHintText: '💜 点击这里选择 💜',
+                audio: 'music/李的背景音乐.mp3',
+                animation: 'leaves'
+            },
+            susu: {
+                title: '💙 苏苏有话说 💙',
+                promptTitle: '申申想说什么呢？🐇',
+                finishedTitle: '💙 已读完 💙',
+                restartText: '💙 再听一遍',
+                typingText: '苏苏正在输入中 💙',
+                inputHintText: '点击这里选择回复 💙',
+                finishedHintText: '💙 点击这里选择 💙',
+                audio: 'music/苏的背景音乐爱得起.mp3',
+                animation: 'stars'
+            }
+        };
+        
+        // 切换主题
+        function switchTheme(theme) {
+            if (theme === currentTheme) return;
+            
+            // 切换主题类
+            document.body.className = `theme-${theme}`;
+            currentTheme = theme;
+            
+            // 更新背景音乐
+            currentAudio.src = themeConfig[theme].audio;
+            playAudio();
+            
+            // 停止当前动画
+            if (animationInterval) {
+                clearInterval(animationInterval);
+            }
+            
+            // 开始新动画
+            startAnimation(themeConfig[theme].animation);
+            
+            // 重新加载对话
+            if (window.vm) {
+                window.vm.loadDialog(theme);
+            }
+        }
+        
+        // 播放音频
+        function playAudio() {
+            currentAudio.play().catch(function(error) {
+                console.log('自动播放被阻止:', error);
+            });
+        }
+        
+        // 开始动画
+        function startAnimation(type) {
+            const container = document.getElementById('animation-container');
+            
+            function createElement() {
+                const element = document.createElement('div');
+                
+                if (type === 'leaves') {
+                    element.className = 'falling-leaf';
+                    element.innerHTML = '🍃';
+                } else if (type === 'stars') {
+                    element.className = 'falling-star';
+                    element.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24"><path fill="#5DADE2" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
+                }
+                
+                // 随机位置
+                element.style.left = Math.random() * 100 + '%';
+                element.style.top = '-30px';
+                
+                // 随机大小
+                const size = 15 + Math.random() * 15;
+                element.style.width = size + 'px';
+                element.style.height = size + 'px';
+                
+                // 随机动画时长
+                const duration = 8 + Math.random() * 6;
+                element.style.animationDuration = duration + 's';
+                
+                // 随机延迟
+                element.style.animationDelay = Math.random() * 3 + 's';
+                
+                // 随机透明度
+                element.style.opacity = 0.4 + Math.random() * 0.4;
+                
+                container.appendChild(element);
+                
+                // 动画结束后移除
+                setTimeout(() => {
+                    if (element.parentNode) {
+                        element.parentNode.removeChild(element);
+                    }
+                }, (duration + 3) * 1000);
+            }
+            
+            // 初始创建一些元素
+            for (let i = 0; i < 5; i++) {
+                setTimeout(createElement, i * 800);
+            }
+            
+            // 持续创建元素
+            animationInterval = setInterval(createElement, 2500);
+        }
+        
+        // 开场白控制
+        function startJourney() {
+            // 关闭弹窗
+            document.getElementById('welcome-modal').classList.remove('show');
+            
+            // 开始动画
+            startAnimation(themeConfig[currentTheme].animation);
+            
+            // 播放音乐
+            playAudio();
+            
+            // 等待 Vue 初始化完成后开始对话
+            var checkAndStart = function() {
+                if (window.vm && window.vm.isInitialized) {
+                    // Vue 已初始化，开始对话
+                    if (window.vm.messages.length === 0) {
+                        window.vm.appendDialog('0000');
+                    }
+                } else {
+                    // Vue 还未初始化，等待 100ms 后重试
+                    setTimeout(checkAndStart, 100);
+                }
+            };
+            checkAndStart();
+        }
+        
+        // Vue 实例
+        window.vm = new Vue({
+            el: '#mobile',
+            data: {
+                messages: [],
+                currentDialogId: null,
+                lastDialog: null,
+                isTyping: false,
+                hasPrompt: false,
+                hasOptions: false,
+                isFinished: false,
+                isInitialized: false,
+                currentTheme: 'li',
+                dialogData: {
+                    li: null,
+                    susu: null
+                }
+            },
+            computed: {
+                latestMsgContent: function() {
+                    if (this.messages.length > 0) {
+                        return this.messages[this.messages.length - 1].content;
+                    }
+                    return '加载中...';
+                },
+                pageTitle: function() {
+                    return themeConfig[this.currentTheme].title;
+                },
+                promptTitle: function() {
+                    return themeConfig[this.currentTheme].promptTitle;
+                },
+                finishedTitle: function() {
+                    return themeConfig[this.currentTheme].finishedTitle;
+                },
+                restartText: function() {
+                    return themeConfig[this.currentTheme].restartText;
+                },
+                typingText: function() {
+                    return themeConfig[this.currentTheme].typingText;
+                },
+                inputHintText: function() {
+                    return themeConfig[this.currentTheme].inputHintText;
+                },
+                finishedHintText: function() {
+                    return themeConfig[this.currentTheme].finishedHintText;
+                }
+            },
+            methods: {
+                loadDialog: function(theme) {
+                    this.currentTheme = theme;
+                    this.messages = [];
+                    this.currentDialogId = null;
+                    this.lastDialog = null;
+                    this.isTyping = false;
+                    this.hasPrompt = false;
+                    this.hasOptions = false;
+                    this.isFinished = false;
+                    
+                    // 加载对应的对话数据
+                    if (theme === 'li') {
+                        // 加载李的对话数据
+                        this.loadLiDialog();
+                    } else if (theme === 'susu') {
+                        // 加载苏苏的对话数据
+                        this.loadSusuDialog();
+                    }
+                },
+                loadLiDialog: function() {
+                    // 加载李的对话数据
+                    // 这里可以使用 AJAX 加载 data/dialog.json
+                    // 为了简化，这里直接使用模拟数据
+                    this.dialogData.li = {
+                        fromMe: [
+                            {
+                                id: '0000',
+                                details: [
+                                    [
+                                        '亲爱的阿鱼 🐰',
+                                        '今天是你的生日，我想对你说...',
+                                        '你是我生命中最美好的相遇 💖'
+                                    ]
+                                ],
+                                responses: [
+                                    {
+                                        content: '我也爱你！💕',
+                                        nextAuthor: ['0001']
+                                    }
+                                ]
+                            },
+                            {
+                                id: '0001',
+                                details: [
+                                    [
+                                        '从我们相识的那天起，',
+                                        '我的生活就变得充满了色彩。',
+                                        '你是我每天醒来的动力，',
+                                        '是我每晚入睡前的思念。'
+                                    ]
+                                ],
+                                responses: [
+                                    {
+                                        content: '你也是我的动力 💜',
+                                        nextAuthor: ['0002']
+                                    }
+                                ]
+                            },
+                            {
+                                id: '0002',
+                                details: [
+                                    [
+                                        '我希望我们能一直在一起，',
+                                        '不管未来遇到什么困难，',
+                                        '我们都能手牵手一起面对。',
+                                        '我爱你，永远爱你！'
+                                    ]
+                                ]
+                            }
+                        ],
+                        fromUser: []
+                    };
+                    
+                    this.isInitialized = true;
+                    this.appendDialog('0000');
+                },
+                loadSusuDialog: function() {
+                    // 加载苏苏的对话数据
+                    // 这里可以使用 AJAX 加载 data/susu-dialog.json
+                    // 为了简化，这里直接使用模拟数据
+                    this.dialogData.susu = {
+                        fromMe: [
+                            {
+                                id: 'susu001',
+                                details: [
+                                    [
+                                        '🐰 To 申申酱：',
+                                        '也许我词不达意 但我很开心遇见你',
+                                        '遇到你是我最幸运的事',
+                                        '因为你总让我笑让我开心 💙'
+                                    ]
+                                ],
+                                responses: [
+                                    {
+                                        content: '苏苏，我也很开心遇见你！💙',
+                                        nextAuthor: ['susu002']
+                                    }
+                                ]
+                            },
+                            {
+                                id: 'susu002',
+                                details: [
+                                    [
+                                        '在和你相处的时间里我很快乐',
+                                        '我也常常因为你而感动幸福',
+                                        '感谢你出现在我平凡的高中时期 🏫'
+                                    ]
+                                ],
+                                responses: [
+                                    {
+                                        content: '谢谢你一直陪着我 🥺',
+                                        nextAuthor: ['susu003']
+                                    }
+                                ]
+                            },
+                            {
+                                id: 'susu003',
+                                details: [
+                                    [
+                                        '因为你的到来 让我的高中生活变得生动有趣',
+                                        '你的出现 就像白开水一样淡淡的日子里',
+                                        '偷偷地加了一颗糖 🍬'
+                                    ]
+                                ],
+                                responses: [
+                                    {
+                                        content: '你也是我生活中的糖 💖',
+                                        nextAuthor: ['susu004']
+                                    }
+                                ]
+                            },
+                            {
+                                id: 'susu004',
+                                details: [
+                                    [
+                                        '还记得2024年2月7日吗？',
+                                        '我们第一次在王者里绑了关系',
+                                        '当时真的超级开心呢！',
+                                        '<img src="img/王者第一次绑关系.jpg" style="max-width: 100%; border-radius: 8px; margin-top: 10px;">'
+                                    ]
+                                ],
+                                responses: [
+                                    {
+                                        content: '当然记得！那时候超兴奋的 🎮',
+                                        nextAuthor: ['susu005']
+                                    }
+                                ]
+                            },
+                            {
+                                id: 'susu005',
+                                details: [
+                                    [
+                                        '还有那次配合你拍视频',
+                                        '虽然有点害羞但还是很开心',
+                                        '能和你一起做这些有趣的事情',
+                                        '<img src="img/配合拍视频.jpg" style="max-width: 100%; border-radius: 8px; margin-top: 10px;">'
+                                    ]
+                                ],
+                                responses: [
+                                    {
+                                        content: '和你一起做什么都开心 💕',
+                                        nextAuthor: ['susu006']
+                                    }
+                                ]
+                            },
+                            {
+                                id: 'susu006',
+                                details: [
+                                    [
+                                        '在学校拍的那张照片',
+                                        '后来你做成了聊天背景',
+                                        '我知道的时候真的超级感动',
+                                        '<img src="img/聊天背景啊.jpg" style="max-width: 100%; border-radius: 8px; margin-top: 10px;">'
+                                    ]
+                                ],
+                                responses: [
+                                    {
+                                        content: '因为你是我最想看到的人呀 👀',
+                                        nextAuthor: ['susu007']
+                                    }
+                                ]
+                            },
+                            {
+                                id: 'susu007',
+                                details: [
+                                    [
+                                        '我们的聊天背景都是对方',
+                                        '这样每次聊天都会想起彼此',
+                                        '感觉距离好像也没那么远了',
+                                        '<img src="img/彼此作为聊天背景.jpg" style="max-width: 100%; border-radius: 8px; margin-top: 10px;">'
+                                    ]
+                                ],
+                                responses: [
+                                    {
+                                        content: '对啊，看到背景就像看到你在身边 💞',
+                                        nextAuthor: ['susu008']
+                                    }
+                                ]
+                            },
+                            {
+                                id: 'susu008',
+                                details: [
+                                    [
+                                        '还有那次写生的时候',
+                                        '我们一起在外面画画',
+                                        '那天的阳光特别好，就像你一样',
+                                        '<img src="img/写生.jpg" style="max-width: 100%; border-radius: 8px; margin-top: 10px;">'
+                                    ]
+                                ]
+                            }
+                        ],
+                        fromUser: []
+                    };
+                    
+                    this.isInitialized = true;
+                    this.appendDialog('susu001');
+                },
+                appendDialog: function(id) {
+                    this.currentDialogId = id;
+                    const dialog = this.getDialogById(id);
+                    
+                    if (!dialog) return;
+                    
+                    this.isTyping = true;
+                    this.hasPrompt = false;
+                    this.hasOptions = false;
+                    
+                    // 模拟打字效果
+                    setTimeout(() => {
+                        this.isTyping = false;
+                        
+                        // 添加对话内容
+                        dialog.details.forEach((detail, index) => {
+                            setTimeout(() => {
+                                detail.forEach(line => {
+                                    this.messages.push({
+                                        author: 'me',
+                                        content: line
+                                    });
+                                });
+                            }, index * 500);
+                        });
+                        
+                        // 显示回复选项
+                        setTimeout(() => {
+                            this.lastDialog = dialog;
+                            if (dialog.responses && dialog.responses.length > 0) {
+                                this.hasOptions = true;
+                                this.togglePrompt(true);
+                            } else {
+                                this.isFinished = true;
+                                this.hasOptions = true;
+                                this.togglePrompt(true);
+                            }
+                        }, dialog.details.length * 500 + 1000);
+                    }, 1000);
+                },
+                getDialogById: function(id) {
+                    const dialogs = this.dialogData[this.currentTheme].fromMe;
+                    return dialogs.find(dialog => dialog.id === id);
+                },
+                respond: function(response) {
+                    this.togglePrompt(false);
+                    
+                    // 添加用户回复
+                    this.messages.push({
+                        author: 'author',
+                        content: response.content
+                    });
+                    
+                    // 显示下一个对话
+                    if (response.nextAuthor && response.nextAuthor.length > 0) {
+                        setTimeout(() => {
+                            this.appendDialog(response.nextAuthor[0]);
+                        }, 1000);
+                    }
+                },
+                togglePrompt: function(show) {
+                    this.hasPrompt = show;
+                },
+                restartDialog: function() {
+                    this.loadDialog(this.currentTheme);
+                }
+            },
+            mounted: function() {
+                // 初始化时加载李的对话
+                this.loadDialog('li');
+            }
+        });
+        
+        // 添加用户交互事件监听器，确保在移动设备上也能触发播放
+        function handleUserInteraction() {
+            playAudio();
+            // 移除所有事件监听器，避免重复触发
+            document.removeEventListener('click', handleUserInteraction);
+            document.removeEventListener('touchstart', handleUserInteraction);
+            document.removeEventListener('touchend', handleUserInteraction);
+            document.removeEventListener('touchmove', handleUserInteraction);
+        }
+        
+        // 添加多种事件监听器，覆盖不同设备和交互方式
+        document.addEventListener('click', handleUserInteraction, { once: true });
+        document.addEventListener('touchstart', handleUserInteraction, { once: true });
+        document.addEventListener('touchend', handleUserInteraction, { once: true });
+        document.addEventListener('touchmove', handleUserInteraction, { once: true });
+    </script>
+</body>
+</html>
