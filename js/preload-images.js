@@ -68,35 +68,59 @@
     var loadedCount = 0;
     var totalCount = imagesToPreload.length;
 
-    console.log('📸 开始预加载照片，共 ' + totalCount + ' 张...');
-
-    // 预加载每张照片
-    imagesToPreload.forEach(function(src) {
-        var img = new Image();
-        
-        img.onload = function() {
-            loadedCount++;
-            console.log('✅ 已加载：' + src + ' (' + loadedCount + '/' + totalCount + ')');
-            
-            // 所有照片加载完成
-            if (loadedCount === totalCount) {
-                console.log('🎉 所有照片预加载完成！');
-            }
-        };
-        
-        img.onerror = function() {
-            console.warn('❌ 加载失败：' + src);
-            loadedCount++;
-        };
-        
-        // 开始加载
-        img.src = src;
-    });
-
     // 暴露预加载状态到全局
     window.imagesPreloaded = false;
     window.checkImagesPreloaded = function() {
         return loadedCount === totalCount;
     };
+
+    // 延迟预加载，避免阻塞页面渲染
+    function startPreload() {
+        console.log('📸 开始预加载照片，共 ' + totalCount + ' 张...');
+
+        // 分批预加载，每批加载5张
+        var batchSize = 5;
+        var currentIndex = 0;
+
+        function loadBatch() {
+            var batch = imagesToPreload.slice(currentIndex, currentIndex + batchSize);
+            if (batch.length === 0) {
+                console.log('🎉 所有照片预加载完成！');
+                window.imagesPreloaded = true;
+                return;
+            }
+
+            batch.forEach(function(src) {
+                var img = new Image();
+                
+                img.onload = function() {
+                    loadedCount++;
+                    console.log('✅ 已加载：' + src + ' (' + loadedCount + '/' + totalCount + ')');
+                };
+                
+                img.onerror = function() {
+                    console.warn('❌ 加载失败：' + src);
+                    loadedCount++;
+                };
+                
+                // 开始加载
+                img.src = src;
+            });
+
+            // 延迟加载下一批，给浏览器时间处理其他任务
+            currentIndex += batchSize;
+            setTimeout(loadBatch, 200);
+        }
+
+        // 开始第一批加载
+        loadBatch();
+    }
+
+    // 页面加载完成后开始预加载
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startPreload);
+    } else {
+        startPreload();
+    }
 
 })();
