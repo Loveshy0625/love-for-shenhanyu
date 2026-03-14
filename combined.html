@@ -376,9 +376,8 @@
                     :key="index"
                     :class="msg.author === 'author' ? 'msg-author' : 'msg-me'">
                     <div class="msg"
-                        :class="'msg-bounce-in-' + (msg.author === 'author' ? 'left': 'right')"
-                        :style="msg.width && msg.height && {width: msg.width - 26 + 'px', height: msg.height - 18 + 'px'}"
-                        v-html="msg.content"></div>
+                            :class="'msg-bounce-in-' + (msg.author === 'author' ? 'left': 'right')"
+                            v-html="msg.content"></div>
                 </div>
             </div>
         </div>
@@ -1096,11 +1095,6 @@
                         if (msg.isImg) {
                             return _this.onImageLoad($('#mock-msg img'));
                         }
-                    }).then(function () {
-                        var $mockMsg = $('#mock-msg');
-                        msg.width = $mockMsg.width();
-                        msg.height = $mockMsg.height();
-                        _this.messages = [].concat(_this.messages);
                     });
                 },
                 delay: function(amount) {
