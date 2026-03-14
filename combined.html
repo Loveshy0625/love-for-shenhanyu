@@ -760,6 +760,7 @@
                 isFinished: false,
                 isInitialized: false,
                 currentTheme: 'li',
+                loadingTheme: null,
                 dialogData: {
                     li: null,
                     susu: null
@@ -797,6 +798,7 @@
             methods: {
                 loadDialog: function(theme) {
                     this.currentTheme = theme;
+                    this.loadingTheme = theme;
                     this.messages = [];
                     this.currentDialogId = null;
                     this.lastDialog = null;
@@ -827,8 +829,8 @@
                             return response.json();
                         })
                         .then(function(data) {
-                            // 检查当前主题是否仍然是李
-                            if (_this.currentTheme === expectedTheme) {
+                            // 检查当前主题和加载主题是否仍然是李
+                            if (_this.currentTheme === expectedTheme && _this.loadingTheme === expectedTheme) {
                                 _this.dialogData.li = data;
                                 _this.isInitialized = true;
                                 _this.appendDialog('0000');
@@ -851,8 +853,8 @@
                             return response.json();
                         })
                         .then(function(data) {
-                            // 检查当前主题是否仍然是苏苏
-                            if (_this.currentTheme === expectedTheme) {
+                            // 检查当前主题和加载主题是否仍然是苏苏
+                            if (_this.currentTheme === expectedTheme && _this.loadingTheme === expectedTheme) {
                                 // 直接使用susu-dialog.json中的数据，不添加额外内容
                                 _this.dialogData.susu = data;
                                 _this.isInitialized = true;
