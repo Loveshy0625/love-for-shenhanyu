@@ -52,6 +52,7 @@
         'img/高中.jpg',
         'img/国庆节.jpg',
         'img/国庆节副本.jpg',
+        'img/第一次出去玩.jpg',
 
         'img/苏苏和申.jpg',
         'img/苏苏和申申.jpg',
