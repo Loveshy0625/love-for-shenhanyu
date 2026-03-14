@@ -192,11 +192,31 @@
     <script src="js/susu.js"></script>
     
     <!-- 背景音乐 -->
-    <audio autoplay loop>
+    <audio id="bg-music" loop>
         <source src="music/苏的背景音乐爱得起.mp3" type="audio/mpeg">
       </audio>
     
     <script>
+        // 处理背景音乐播放
+        document.addEventListener('DOMContentLoaded', function() {
+            const audio = document.getElementById('bg-music');
+            
+            // 尝试自动播放
+            function playAudio() {
+                audio.play().catch(function(error) {
+                    console.log('自动播放被阻止:', error);
+                    // 自动播放被阻止时，等待用户交互后再播放
+                    document.addEventListener('click', function playOnClick() {
+                        audio.play();
+                        document.removeEventListener('click', playOnClick);
+                    }, { once: true });
+                });
+            }
+            
+            // 初始尝试播放
+            playAudio();
+        });
+        
         // 蓝色小星星掉落效果 - 和主页面落叶逻辑一致
         function createFallingStar() {
             var star = document.createElement('div');
