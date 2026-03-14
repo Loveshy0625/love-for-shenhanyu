@@ -727,7 +727,12 @@
                 if (window.vm && window.vm.isInitialized) {
                     // Vue 已初始化，开始对话
                     if (window.vm.messages.length === 0) {
-                        window.vm.appendDialog('0000');
+                        // 根据当前主题启动对应的对话
+                        if (currentTheme === 'li') {
+                            window.vm.appendDialog('0000');
+                        } else if (currentTheme === 'susu') {
+                            window.vm.appendDialog('susu001');
+                        }
                     }
                 } else {
                     // Vue 还未初始化，等待 100ms 后重试
@@ -807,7 +812,7 @@
                 loadLiDialog: function() {
                     // 加载李的对话数据
                     var _this = this;
-                    fetch('./assets/dialog.json')
+                    fetch('./assets/dialog.json?v=' + new Date().getTime())
                         .then(function(response) {
                             if (!response.ok) {
                                 throw new Error('Network response was not ok');
@@ -827,7 +832,7 @@
                 loadSusuDialog: function() {
                     // 加载苏苏的对话数据
                     var _this = this;
-                    fetch('./assets/susu-dialog.json')
+                    fetch('./assets/susu-dialog.json?v=' + new Date().getTime())
                         .then(function(response) {
                             if (!response.ok) {
                                 throw new Error('Network response was not ok');
