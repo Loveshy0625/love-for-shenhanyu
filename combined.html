@@ -885,11 +885,11 @@
                     console.log('Found dialog:', dialog);
 
                     // dialog.details 是数组的数组，取第一个数组
-                    // 特殊处理：如果是倒数日对话（ID: 0004），使用动态内容
+                    // 特殊处理：如果是李的主题且对话ID是 0004（倒数日），使用动态内容
                     var messageArray;
-                    if (id === '0004' && typeof getDynamicCountdownContent === 'function') {
+                    if (_this.currentTheme === 'li' && id === '0004' && typeof getDynamicCountdownContent === 'function') {
                         messageArray = [getDynamicCountdownContent()];
-                        console.log('Using dynamic countdown content');
+                        console.log('Using dynamic countdown content for Li theme');
                     } else {
                         messageArray = dialog.details && dialog.details.length > 0 ? dialog.details[0] : [];
                     }
