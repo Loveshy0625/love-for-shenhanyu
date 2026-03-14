@@ -18,11 +18,16 @@
         /* 主题切换器 */
         .theme-switcher {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 10000;
             display: flex;
             gap: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 8px 15px;
+            border-radius: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         
         .theme-btn {
@@ -1127,6 +1132,12 @@
                 onImageLoad: function($img) {
                     return new Promise(function(resolve) {
                         $img.one('load', resolve).each(function(index, target) {
+                            // 为图片添加错误处理，当图片加载失败时显示默认占位符
+                            $(target).on('error', function() {
+                                console.log('图片加载失败:', this.src);
+                                // 可以设置一个默认的错误图片
+                                // this.src = 'img/default.jpg';
+                            });
                             target.complete && $(target).trigger('load');
                         });
                     });
