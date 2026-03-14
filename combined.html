@@ -438,6 +438,154 @@
      </audio>
 
     <script>
+        // 重要日期配置（请根据实际情况修改！！！）
+        const IMPORTANT_DATES = {
+            // 出生日期
+            ayuBirth: new Date('2007-04-24'),  // 阿鱼出生：2007 年 4 月 24 日 ✅
+            myBirth: new Date('2002-06-21'),    // 我的出生：2002 年 6 月 21 日 ✅
+            
+            // 相识纪念日
+            firstMeet: new Date('2025-06-12'),  // 初次相见：2025 年 6 月 12 日 ✅
+            wechat: new Date('2025-06-16'),     // 加微信：2025 年 6 月 16 日 ✅
+            couple: new Date('2025-06-30'),     // 情侣标：2025 年 6 月 30 日 ✅
+            firstDate: new Date('2025-07-29'),  // 第一次见面：2025 年 7 月 29 日 ✅
+            confession: new Date('2025-06-28'), // 小作文表白：2025 年 6 月 28 日 ✅
+            loveStart: new Date('2025-06-25'),  // 恋爱开始：2025 年 6 月 25 日 ✅（她查分那天）
+            
+            // 特殊事件
+            jealous: new Date('2025-10-22'),    // 涵钰吃醋了：2025 年 10 月 22 日 ✅
+            period: new Date('2025-08-12'),     // 姨妈超级疼：2025 年 8 月 12 日 ✅
+            love100days: new Date('2025-10-03'), // 恋爱 100 天（自动计算，不用改）
+            
+            // 生日
+            ayuBirthday: new Date(new Date().getFullYear(), 2, 14) // 阿鱼的生日：每年 3 月 14 日（自动计算今年）
+        };
+
+        // 计算两个日期之间的天数差
+        function daysBetween(date1, date2) {
+            const oneDay = 24 * 60 * 60 * 1000;
+            return Math.round((date2 - date1) / oneDay);
+        }
+
+        // 计算倒数日
+        function countDownDays(targetDate) {
+            const now = new Date();
+            return daysBetween(now, targetDate);
+        }
+
+        // 计算已经过去的天数
+        function daysSince(startDate) {
+            const now = new Date();
+            return daysBetween(startDate, now);
+        }
+
+        // 格式化日期显示
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}年${month}月${day}日`;
+        }
+
+        // 获取动态倒数日内容
+        function getDynamicCountdownContent() {
+            const today = new Date();
+            const todayStr = `${today.getMonth() + 1}月${today.getDate()}号`;
+            const currentMonth = today.getMonth(); // 0-11
+            const currentDay = today.getDate(); // 1-31
+            
+            // 检查是否是生日当天（3 月 14 日）
+            const isBirthday = (currentMonth === 2 && currentDay === 14); // 3 月是索引 2
+            
+            // 距离生日的天数
+            const daysToBirthday = countDownDays(IMPORTANT_DATES.ayuBirthday);
+            
+            // 即将到来的纪念日
+            const love300daysDate = new Date(IMPORTANT_DATES.loveStart.getTime() + 300 * 24 * 60 * 60 * 1000);
+            const love1yearDate = new Date(IMPORTANT_DATES.loveStart.getTime() + 365 * 24 * 60 * 60 * 1000);
+            const meet1yearDate = new Date(IMPORTANT_DATES.firstMeet.getTime() + 365 * 24 * 60 * 60 * 1000);
+            
+            const daysTo300days = countDownDays(love300daysDate);
+            const daysTo1year = countDownDays(love1yearDate);
+            const daysToMeet1year = countDownDays(meet1yearDate);
+            
+            // 已经过去的纪念日
+            const love100daysDate = new Date(IMPORTANT_DATES.loveStart.getTime() + 100 * 24 * 60 * 60 * 1000);
+            
+            const daysSinceJealous = daysSince(IMPORTANT_DATES.jealous);
+            const daysSince100days = daysSince(love100daysDate);
+            const daysSincePeriod = daysSince(IMPORTANT_DATES.period);
+            const daysSinceMeet = daysSince(IMPORTANT_DATES.firstMeet);
+            
+            // 表白与相识
+            const daysSinceConfession = daysSince(IMPORTANT_DATES.confession);
+            const daysSinceLove = daysSince(IMPORTANT_DATES.loveStart);
+            const daysSinceKnow = daysSince(IMPORTANT_DATES.firstMeet);
+            
+            // 出生天数
+            const daysSinceAyuBirth = daysSince(IMPORTANT_DATES.ayuBirth);
+            const daysSinceMyBirth = daysSince(IMPORTANT_DATES.myBirth);
+
+            if (isBirthday) {
+                // 生日当天的特殊显示
+                return `<pre>🎂🎂🎂 生日快乐 我的阿鱼 🎂🎂🎂</pre>
+今天${todayStr} <span style="color: #ff69b4; font-weight: bold; font-size: 16px;">🎉 今天是你的生日！🎉</span>
+让我来记录一下我们的点点滴滴 💕
+
+<pre>⏳ 即将到来的纪念日</pre>
+💕 和涵钰恋爱 300 天还有：${daysTo300days}天
+🎉 和涵钰恋爱 1 周年还有：${daysTo1year}天
+👫 初次相见 1 周年还有：${daysToMeet1year}天
+
+<pre>💝 已经过去的纪念日</pre>
+🥰 涵钰吃醋了已经：${daysSinceJealous}天
+💯 和涵钰恋爱 100 天已经：${daysSince100days}天
+😢 姨妈超级疼已经：${daysSincePeriod}天
+👀 初次相见已经：${daysSinceMeet}天
+
+<pre>💌 表白与相识</pre>
+📝 小作文表白已经：${daysSinceConfession}天
+💑 和涵钰恋爱已经：${daysSinceLove}天
+📱 和涵钰认识已经：${daysSinceKnow}天
+
+<pre>🎂 我们的出生</pre>
+👶 涵钰出生于${formatDate(IMPORTANT_DATES.ayuBirth)}
+👶 涵钰出生已经：${daysSinceAyuBirth}天
+👶 我出生已经：${daysSinceMyBirth}天
+
+<pre>✨ 生日快乐 我最爱的阿鱼 ✨</pre>
+<pre>💜 愿你永远开心 被爱包围 💜</pre>`;
+            } else {
+                // 非生日当天的显示
+                return `<pre>📅 我们的倒数日记录 📅</pre>
+今天${todayStr} 距离 314 生日还有${daysToBirthday}天 ✨
+让我来记录一下我们的点点滴滴 💕
+
+<pre>⏳ 即将到来的纪念日</pre>
+💕 和涵钰恋爱 300 天还有：${daysTo300days}天
+🎉 和涵钰恋爱 1 周年还有：${daysTo1year}天
+👫 初次相见 1 周年还有：${daysToMeet1year}天
+
+<pre>💝 已经过去的纪念日</pre>
+🥰 涵钰吃醋了已经：${daysSinceJealous}天
+💯 和涵钰恋爱 100 天已经：${daysSince100days}天
+😢 姨妈超级疼已经：${daysSincePeriod}天
+👀 初次相见已经：${daysSinceMeet}天
+
+<pre>💌 表白与相识</pre>
+📝 小作文表白已经：${daysSinceConfession}天
+💑 和涵钰恋爱已经：${daysSinceLove}天
+📱 和涵钰认识已经：${daysSinceKnow}天
+
+<pre>🎂 我们的出生</pre>
+👶 涵钰出生于${formatDate(IMPORTANT_DATES.ayuBirth)}
+👶 涵钰出生已经：${daysSinceAyuBirth}天
+👶 我出生已经：${daysSinceMyBirth}天
+
+<pre>✨ 每一个数字都是爱的证明 ✨</pre>`;
+            }
+        }
+
         // 当前主题
         let currentTheme = 'li';
         let currentAudio = document.getElementById('bg-music');
@@ -650,261 +798,360 @@
                 },
                 loadLiDialog: function() {
                     // 加载李的对话数据
-                    // 这里可以使用 AJAX 加载 data/dialog.json
-                    // 为了简化，这里直接使用模拟数据
-                    this.dialogData.li = {
-                        fromMe: [
-                            {
-                                id: '0000',
-                                details: [
-                                    [
-                                        '亲爱的阿鱼 🐰',
-                                        '今天是你的生日，我想对你说...',
-                                        '你是我生命中最美好的相遇 💖'
-                                    ]
-                                ],
-                                responses: [
-                                    {
-                                        content: '我也爱你！💕',
-                                        nextAuthor: ['0001']
-                                    }
-                                ]
-                            },
-                            {
-                                id: '0001',
-                                details: [
-                                    [
-                                        '从我们相识的那天起，',
-                                        '我的生活就变得充满了色彩。',
-                                        '你是我每天醒来的动力，',
-                                        '是我每晚入睡前的思念。'
-                                    ]
-                                ],
-                                responses: [
-                                    {
-                                        content: '你也是我的动力 💜',
-                                        nextAuthor: ['0002']
-                                    }
-                                ]
-                            },
-                            {
-                                id: '0002',
-                                details: [
-                                    [
-                                        '我希望我们能一直在一起，',
-                                        '不管未来遇到什么困难，',
-                                        '我们都能手牵手一起面对。',
-                                        '我爱你，永远爱你！'
-                                    ]
-                                ]
+                    var _this = this;
+                    fetch('./assets/dialog.json')
+                        .then(function(response) {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
                             }
-                        ],
-                        fromUser: []
-                    };
-                    
-                    this.isInitialized = true;
-                    this.appendDialog('0000');
+                            return response.json();
+                        })
+                        .then(function(data) {
+                            _this.dialogData.li = data;
+                            _this.isInitialized = true;
+                            _this.appendDialog('0000');
+                        })
+                        .catch(function(error) {
+                            console.error('Failed to load dialog.json:', error);
+                            alert('加载对话失败，请刷新页面重试');
+                        });
                 },
                 loadSusuDialog: function() {
                     // 加载苏苏的对话数据
-                    // 这里可以使用 AJAX 加载 data/susu-dialog.json
-                    // 为了简化，这里直接使用模拟数据
-                    this.dialogData.susu = {
-                        fromMe: [
-                            {
-                                id: 'susu001',
-                                details: [
-                                    [
-                                        '🐰 To 申申酱：',
-                                        '也许我词不达意 但我很开心遇见你',
-                                        '遇到你是我最幸运的事',
-                                        '因为你总让我笑让我开心 💙'
-                                    ]
-                                ],
-                                responses: [
-                                    {
-                                        content: '苏苏，我也很开心遇见你！💙',
-                                        nextAuthor: ['susu002']
-                                    }
-                                ]
-                            },
-                            {
-                                id: 'susu002',
-                                details: [
-                                    [
-                                        '在和你相处的时间里我很快乐',
-                                        '我也常常因为你而感动幸福',
-                                        '感谢你出现在我平凡的高中时期 🏫'
-                                    ]
-                                ],
-                                responses: [
-                                    {
-                                        content: '谢谢你一直陪着我 🥺',
-                                        nextAuthor: ['susu003']
-                                    }
-                                ]
-                            },
-                            {
-                                id: 'susu003',
-                                details: [
-                                    [
-                                        '因为你的到来 让我的高中生活变得生动有趣',
-                                        '你的出现 就像白开水一样淡淡的日子里',
-                                        '偷偷地加了一颗糖 🍬'
-                                    ]
-                                ],
-                                responses: [
-                                    {
-                                        content: '你也是我生活中的糖 💖',
-                                        nextAuthor: ['susu004']
-                                    }
-                                ]
-                            },
-                            {
-                                id: 'susu004',
-                                details: [
-                                    [
-                                        '还记得2024年2月7日吗？',
-                                        '我们第一次在王者里绑了关系',
-                                        '当时真的超级开心呢！',
-                                        '<img src="img/王者第一次绑关系.jpg" style="max-width: 100%; border-radius: 8px; margin-top: 10px;">'
-                                    ]
-                                ],
-                                responses: [
-                                    {
-                                        content: '当然记得！那时候超兴奋的 🎮',
-                                        nextAuthor: ['susu005']
-                                    }
-                                ]
-                            },
-                            {
-                                id: 'susu005',
-                                details: [
-                                    [
-                                        '还有那次配合你拍视频',
-                                        '虽然有点害羞但还是很开心',
-                                        '能和你一起做这些有趣的事情',
-                                        '<img src="img/配合拍视频.jpg" style="max-width: 100%; border-radius: 8px; margin-top: 10px;">'
-                                    ]
-                                ],
-                                responses: [
-                                    {
-                                        content: '和你一起做什么都开心 💕',
-                                        nextAuthor: ['susu006']
-                                    }
-                                ]
-                            },
-                            {
-                                id: 'susu006',
-                                details: [
-                                    [
-                                        '在学校拍的那张照片',
-                                        '后来你做成了聊天背景',
-                                        '我知道的时候真的超级感动',
-                                        '<img src="img/聊天背景啊.jpg" style="max-width: 100%; border-radius: 8px; margin-top: 10px;">'
-                                    ]
-                                ],
-                                responses: [
-                                    {
-                                        content: '因为你是我最想看到的人呀 👀',
-                                        nextAuthor: ['susu007']
-                                    }
-                                ]
-                            },
-                            {
-                                id: 'susu007',
-                                details: [
-                                    [
-                                        '我们的聊天背景都是对方',
-                                        '这样每次聊天都会想起彼此',
-                                        '感觉距离好像也没那么远了',
-                                        '<img src="img/彼此作为聊天背景.jpg" style="max-width: 100%; border-radius: 8px; margin-top: 10px;">'
-                                    ]
-                                ],
-                                responses: [
-                                    {
-                                        content: '对啊，看到背景就像看到你在身边 💞',
-                                        nextAuthor: ['susu008']
-                                    }
-                                ]
-                            },
-                            {
-                                id: 'susu008',
-                                details: [
-                                    [
-                                        '还有那次写生的时候',
-                                        '我们一起在外面画画',
-                                        '那天的阳光特别好，就像你一样',
-                                        '<img src="img/写生.jpg" style="max-width: 100%; border-radius: 8px; margin-top: 10px;">'
-                                    ]
-                                ]
+                    var _this = this;
+                    fetch('./assets/susu-dialog.json')
+                        .then(function(response) {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
                             }
-                        ],
-                        fromUser: []
-                    };
-                    
-                    this.isInitialized = true;
-                    this.appendDialog('susu001');
+                            return response.json();
+                        })
+                        .then(function(data) {
+                            // 添加新的图片和文案
+                            var newDialogs = [
+                                {
+                                    id: 'susu009',
+                                    details: [
+                                        [
+                                            '还记得2024年2月7日吗？',
+                                            '我们第一次在王者里绑了关系',
+                                            '当时真的超级开心呢！',
+                                            '<img src="img/王者第一次绑关系.jpg" style="max-width: 100%; border-radius: 10px; margin: 10px 0;">'
+                                        ]
+                                    ],
+                                    responses: [
+                                        {
+                                            content: '当然记得！那时候超兴奋的 🎮',
+                                            nextAuthor: ['susu010']
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'susu010',
+                                    details: [
+                                        [
+                                            '还有那次配合你拍视频',
+                                            '虽然有点害羞但还是很开心',
+                                            '能和你一起做这些有趣的事情',
+                                            '<img src="img/配合拍视频.jpg" style="max-width: 100%; border-radius: 10px; margin: 10px 0;">'
+                                        ]
+                                    ],
+                                    responses: [
+                                        {
+                                            content: '和你一起做什么都开心 💕',
+                                            nextAuthor: ['susu011']
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'susu011',
+                                    details: [
+                                        [
+                                            '在学校拍的那张照片',
+                                            '后来你做成了聊天背景',
+                                            '我知道的时候真的超级感动',
+                                            '<img src="img/聊天背景啊.jpg" style="max-width: 100%; border-radius: 10px; margin: 10px 0;">'
+                                        ]
+                                    ],
+                                    responses: [
+                                        {
+                                            content: '因为你是我最想看到的人呀 �',
+                                            nextAuthor: ['susu012']
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'susu012',
+                                    details: [
+                                        [
+                                            '我们的聊天背景都是对方',
+                                            '这样每次聊天都会想起彼此',
+                                            '感觉距离好像也没那么远了',
+                                            '<img src="img/彼此作为聊天背景.jpg" style="max-width: 100%; border-radius: 10px; margin: 10px 0;">'
+                                        ]
+                                    ],
+                                    responses: [
+                                        {
+                                            content: '对啊，看到背景就像看到你在身边 �',
+                                            nextAuthor: ['susu013']
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: 'susu013',
+                                    details: [
+                                        [
+                                            '还有那次写生的时候',
+                                            '我们一起在外面画画',
+                                            '那天的阳光特别好，就像你一样',
+                                            '<img src="img/写生.jpg" style="max-width: 100%; border-radius: 10px; margin: 10px 0;">'
+                                        ]
+                                    ],
+                                    responses: [
+                                        {
+                                            content: '那段时光真的很美好 �',
+                                            nextAuthor: ['susu008']
+                                        }
+                                    ]
+                                }
+                            ];
+                            
+                            // 将新对话添加到数据中
+                            data.fromMe.splice(7, 0, ...newDialogs);
+                            // 更新susu007的nextAuthor指向新对话
+                            if (data.fromMe[6]) {
+                                data.fromMe[6].responses[0].nextAuthor = ['susu009'];
+                            }
+                            
+                            _this.dialogData.susu = data;
+                            _this.isInitialized = true;
+                            _this.appendDialog('susu001');
+                        })
+                        .catch(function(error) {
+                            console.error('Failed to load susu-dialog.json:', error);
+                            alert('加载对话失败，请刷新页面重试');
+                        });
                 },
                 appendDialog: function(id) {
-                    this.currentDialogId = id;
-                    const dialog = this.getDialogById(id);
-                    
-                    if (!dialog) return;
-                    
+                    var _this = this;
+
+                    console.log('appendDialog called with id:', id);
+
+                    if (!this.dialogData[this.currentTheme]) {
+                        console.error('Dialogs not loaded yet!');
+                        return;
+                    }
+
+                    // 如果 id 是数组，遍历处理
+                    if (Array.isArray(id)) {
+                        id.forEach(function(singleId) {
+                            _this.appendDialog(singleId);
+                        });
+                        return;
+                    }
+
+                    if (!id) {
+                        if (this.lastDialog) {
+                            this.lastDialog.responses = null;
+                        }
+                        return;
+                    }
+
                     this.isTyping = true;
                     this.hasPrompt = false;
                     this.hasOptions = false;
+
+                    const dialog = this.getDialogById(id);
                     
-                    // 模拟打字效果
-                    setTimeout(() => {
+                    if (!dialog) {
+                        console.error('Dialog not found:', id);
                         this.isTyping = false;
-                        
-                        // 添加对话内容
-                        dialog.details.forEach((detail, index) => {
-                            setTimeout(() => {
-                                detail.forEach(line => {
-                                    this.messages.push({
-                                        author: 'me',
-                                        content: line
-                                    });
-                                });
-                            }, index * 500);
-                        });
-                        
-                        // 显示回复选项
-                        setTimeout(() => {
-                            this.lastDialog = dialog;
-                            if (dialog.responses && dialog.responses.length > 0) {
-                                this.hasOptions = true;
-                                this.togglePrompt(true);
-                            } else {
-                                this.isFinished = true;
-                                this.hasOptions = true;
-                                this.togglePrompt(true);
+                        return;
+                    }
+
+                    console.log('Found dialog:', dialog);
+
+                    // dialog.details 是数组的数组，取第一个数组
+                    // 特殊处理：如果是倒数日对话（ID: 0004），使用动态内容
+                    var messageArray;
+                    if (id === '0004' && typeof getDynamicCountdownContent === 'function') {
+                        messageArray = [getDynamicCountdownContent()];
+                        console.log('Using dynamic countdown content');
+                    } else {
+                        messageArray = dialog.details && dialog.details.length > 0 ? dialog.details[0] : [];
+                    }
+                    console.log('Message array length:', messageArray.length);
+
+                    if (!messageArray || messageArray.length === 0) {
+                        console.error('No messages in dialog');
+                        this.isTyping = false;
+                        return;
+                    }
+
+                    // 逐条发送消息
+                    var sendNextMessage = function(index) {
+                        if (index >= messageArray.length) {
+                            // 所有消息发送完毕
+                            _this.lastDialog = dialog;
+                            _this.isTyping = false;
+                            // 检查是否是对话结束（没有 responses）
+                            if (!dialog.responses || dialog.responses.length === 0) {
+                                _this.isFinished = true;
                             }
-                        }, dialog.details.length * 500 + 1000);
-                    }, 1000);
+                            console.log('Dialog finished, isFinished:', _this.isFinished);
+                            
+                            // 如果有下一个对话，继续
+                            if (dialog.nextAuthor) {
+                                _this.appendDialog(dialog.nextAuthor);
+                            } else {
+                                // 显示回复选项
+                                if (dialog.responses && dialog.responses.length > 0) {
+                                    _this.hasOptions = true;
+                                    _this.togglePrompt(true);
+                                } else {
+                                    _this.isFinished = true;
+                                    _this.hasOptions = true;
+                                    _this.togglePrompt(true);
+                                }
+                            }
+                            return;
+                        }
+
+                        var content = messageArray[index];
+                        console.log('Sending message', index, ':', content.substring(0, 30) + '...');
+
+                        _this.delay(700).then(function () {
+                            return _this.sendMsg(content, 'author'); // 我俩在左边，所以用 'author'
+                        }).then(function () {
+                            sendNextMessage(index + 1);
+                        });
+                    };
+
+                    // 开始发送第一条消息
+                    sendNextMessage(0);
                 },
                 getDialogById: function(id) {
                     const dialogs = this.dialogData[this.currentTheme].fromMe;
                     return dialogs.find(dialog => dialog.id === id);
                 },
-                respond: function(response) {
-                    this.togglePrompt(false);
-                    
-                    // 添加用户回复
-                    this.messages.push({
-                        author: 'author',
-                        content: response.content
-                    });
-                    
-                    // 显示下一个对话
-                    if (response.nextAuthor && response.nextAuthor.length > 0) {
-                        setTimeout(() => {
-                            this.appendDialog(response.nextAuthor[0]);
-                        }, 1000);
+                sendMsg: function(message, author) {
+                    console.log('sendMsg:', author, message.substring(0, 50) + '...');
+                    if (author === 'me') {
+                        return this.sendUserMsg(message);
+                    } else {
+                        return this.sendFriendMsg(message, author);
                     }
+                },
+                sendFriendMsg: function(message, author) {
+                    var _this = this;
+                    var content = message;
+                    var length = content.replace(/<[^>]+>/g, "").length;
+                    var isImg = /<img[^>]+>/.test(content);
+                    var isTyping = length > 2 || isImg;
+
+                    var TYPING_MSG_CONTENT = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+                    var msg = {
+                        author: author,
+                        content: isTyping ? TYPING_MSG_CONTENT : content,
+                        isImg: isImg
+                    };
+                    
+                    console.log('Pushing message:', msg.content.substring(0, 30) + '...');
+                    this.messages.push(msg);
+                    console.log('Current messages count:', this.messages.length);
+
+                    // 强制 Vue 更新视图
+                    this.$forceUpdate();
+
+                    if (isTyping) {
+                        this.markMsgSize(msg);
+                        setTimeout(this.updateScroll, 100);
+
+                        return this.delay(Math.min(100 * length, 2000)).then(function () {
+                            return _this.markMsgSize(msg, content);
+                        }).then(function () {
+                            return _this.delay(150);
+                        }).then(function () {
+                            msg.content = content;
+                            _this.onMessageSending();
+                        });
+                    }
+
+                    this.onMessageSending();
+                    return Promise.resolve();
+                },
+                sendUserMsg: function(message) {
+                    this.messages.push({
+                        author: 'me',
+                        content: message
+                    });
+                    this.onMessageSending();
+                    return Promise.resolve();
+                },
+                markMsgSize: function(msg, content) {
+                    var _this = this;
+                    this.latestMsgContent = content || msg.content;
+
+                    return this.delay(0).then(function () {
+                        if (msg.isImg) {
+                            return _this.onImageLoad($('#mock-msg img'));
+                        }
+                    }).then(function () {
+                        var $mockMsg = $('#mock-msg');
+                        msg.width = $mockMsg.width();
+                        msg.height = $mockMsg.height();
+                        _this.messages = [].concat(_this.messages);
+                    });
+                },
+                delay: function(amount) {
+                    if (amount === undefined) amount = 0;
+                    return new Promise(function(resolve) {
+                        setTimeout(resolve, amount);
+                    });
+                },
+                updateScroll: function() {
+                    var $chatbox = $('#mobile-body-content');
+                    var distance = $chatbox[0].scrollHeight - $chatbox.height() - $chatbox.scrollTop();
+                    var duration = 250;
+                    var startTime = Date.now();
+
+                    function step() {
+                        var p = Math.min(1, (Date.now() - startTime) / duration);
+                        $chatbox.scrollTop($chatbox.scrollTop() + distance * p);
+                        if (p < 1) requestAnimationFrame(step);
+                    }
+                    step();
+                },
+                onMessageSending: function() {
+                    var _this = this;
+                    setTimeout(function() {
+                        _this.updateScroll();
+                        var $latestMsg = $('#mobile-body-content .msg-row:last-child .msg');
+                        $latestMsg.find('a').attr('target', '_blank');
+                    });
+                },
+                onImageLoad: function($img) {
+                    return new Promise(function(resolve) {
+                        $img.one('load', resolve).each(function(index, target) {
+                            target.complete && $(target).trigger('load');
+                        });
+                    });
+                },
+                respond: function(response) {
+                    return this.say(response.content, response.nextAuthor);
+                },
+                say: function(content, dialogId) {
+                    var _this = this;
+                    this.hasPrompt = false;
+
+                    return this.delay(200)
+                    .then(function () {
+                        return _this.sendMsg(content, 'me'); // 用户回复在右边
+                    }).then(function () {
+                        return _this.delay(300);
+                    }).then(function () {
+                        return _this.appendDialog(dialogId);
+                    });
                 },
                 togglePrompt: function(show) {
                     this.hasPrompt = show;
