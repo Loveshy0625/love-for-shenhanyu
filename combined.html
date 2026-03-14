@@ -727,11 +727,16 @@
                 if (window.vm && window.vm.isInitialized) {
                     // Vue 已初始化，开始对话
                     if (window.vm.messages.length === 0) {
-                        // 根据当前主题启动对应的对话
-                        if (currentTheme === 'li') {
-                            window.vm.appendDialog('0000');
-                        } else if (currentTheme === 'susu') {
-                            window.vm.appendDialog('susu001');
+                        // 确保 Vue 实例的主题与当前主题一致
+                        if (window.vm.currentTheme !== currentTheme) {
+                            window.vm.loadDialog(currentTheme);
+                        } else {
+                            // 根据当前主题启动对应的对话
+                            if (currentTheme === 'li') {
+                                window.vm.appendDialog('0000');
+                            } else if (currentTheme === 'susu') {
+                                window.vm.appendDialog('susu001');
+                            }
                         }
                     }
                 } else {
@@ -812,6 +817,7 @@
                 loadLiDialog: function() {
                     // 加载李的对话数据
                     var _this = this;
+                    var expectedTheme = 'li';
                     fetch('./assets/dialog.json?v=' + new Date().getTime())
                         .then(function(response) {
                             if (!response.ok) {
@@ -820,9 +826,12 @@
                             return response.json();
                         })
                         .then(function(data) {
-                            _this.dialogData.li = data;
-                            _this.isInitialized = true;
-                            _this.appendDialog('0000');
+                            // 检查当前主题是否仍然是李
+                            if (_this.currentTheme === expectedTheme) {
+                                _this.dialogData.li = data;
+                                _this.isInitialized = true;
+                                _this.appendDialog('0000');
+                            }
                         })
                         .catch(function(error) {
                             console.error('Failed to load dialog.json:', error);
@@ -832,6 +841,7 @@
                 loadSusuDialog: function() {
                     // 加载苏苏的对话数据
                     var _this = this;
+                    var expectedTheme = 'susu';
                     fetch('./assets/susu-dialog.json?v=' + new Date().getTime())
                         .then(function(response) {
                             if (!response.ok) {
@@ -840,10 +850,13 @@
                             return response.json();
                         })
                         .then(function(data) {
-                            // 直接使用susu-dialog.json中的数据，不添加额外内容
-                            _this.dialogData.susu = data;
-                            _this.isInitialized = true;
-                            _this.appendDialog('susu001');
+                            // 检查当前主题是否仍然是苏苏
+                            if (_this.currentTheme === expectedTheme) {
+                                // 直接使用susu-dialog.json中的数据，不添加额外内容
+                                _this.dialogData.susu = data;
+                                _this.isInitialized = true;
+                                _this.appendDialog('susu001');
+                            }
                         })
                         .catch(function(error) {
                             console.error('Failed to load susu-dialog.json:', error);
