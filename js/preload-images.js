@@ -56,7 +56,17 @@
 
         'img/苏苏和申.jpg',
         'img/苏苏和申申.jpg',
-        'img/申和苏苏.jpg'
+        'img/申和苏苏.jpg',
+        
+        // 苏苏新增的图片
+        'img/王者第一次绑关系.jpg',
+        'img/配合拍视频.jpg',
+        'img/聊天背景啊.jpg',
+        'img/彼此作为聊天背景.jpg',
+        'img/写生.jpg',
+        'img/e5689a7782d8c024616ed17b7a6547a6.jpg',
+        'img/89d0c08ce10f36fcdc23d43551436fca.jpg',
+        'img/443e4451aec170b8dff296a0ab7b7217.jpg'
     ];
 
     var loadedCount = 0;

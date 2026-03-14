@@ -835,102 +835,7 @@
                             return response.json();
                         })
                         .then(function(data) {
-                            // 添加新的图片和文案
-                            var newDialogs = [
-                                {
-                                    id: 'susu009',
-                                    details: [
-                                        [
-                                            '还记得2024年2月7日吗？',
-                                            '我们第一次在王者里绑了关系',
-                                            '当时真的超级开心呢！',
-                                            '<img src="img/王者第一次绑关系.jpg" style="max-width: 100%; border-radius: 10px; margin: 10px 0;">'
-                                        ]
-                                    ],
-                                    responses: [
-                                        {
-                                            content: '当然记得！那时候超兴奋的 🎮',
-                                            nextAuthor: ['susu010']
-                                        }
-                                    ]
-                                },
-                                {
-                                    id: 'susu010',
-                                    details: [
-                                        [
-                                            '还有那次配合你拍视频',
-                                            '虽然有点害羞但还是很开心',
-                                            '能和你一起做这些有趣的事情',
-                                            '<img src="img/配合拍视频.jpg" style="max-width: 100%; border-radius: 10px; margin: 10px 0;">'
-                                        ]
-                                    ],
-                                    responses: [
-                                        {
-                                            content: '和你一起做什么都开心 💕',
-                                            nextAuthor: ['susu011']
-                                        }
-                                    ]
-                                },
-                                {
-                                    id: 'susu011',
-                                    details: [
-                                        [
-                                            '在学校拍的那张照片',
-                                            '后来你做成了聊天背景',
-                                            '我知道的时候真的超级感动',
-                                            '<img src="img/聊天背景啊.jpg" style="max-width: 100%; border-radius: 10px; margin: 10px 0;">'
-                                        ]
-                                    ],
-                                    responses: [
-                                        {
-                                            content: '因为你是我最想看到的人呀 �',
-                                            nextAuthor: ['susu012']
-                                        }
-                                    ]
-                                },
-                                {
-                                    id: 'susu012',
-                                    details: [
-                                        [
-                                            '我们的聊天背景都是对方',
-                                            '这样每次聊天都会想起彼此',
-                                            '感觉距离好像也没那么远了',
-                                            '<img src="img/彼此作为聊天背景.jpg" style="max-width: 100%; border-radius: 10px; margin: 10px 0;">'
-                                        ]
-                                    ],
-                                    responses: [
-                                        {
-                                            content: '对啊，看到背景就像看到你在身边 �',
-                                            nextAuthor: ['susu013']
-                                        }
-                                    ]
-                                },
-                                {
-                                    id: 'susu013',
-                                    details: [
-                                        [
-                                            '还有那次写生的时候',
-                                            '我们一起在外面画画',
-                                            '那天的阳光特别好，就像你一样',
-                                            '<img src="img/写生.jpg" style="max-width: 100%; border-radius: 10px; margin: 10px 0;">'
-                                        ]
-                                    ],
-                                    responses: [
-                                        {
-                                            content: '那段时光真的很美好 �',
-                                            nextAuthor: ['susu008']
-                                        }
-                                    ]
-                                }
-                            ];
-                            
-                            // 将新对话添加到数据中
-                            data.fromMe.splice(7, 0, ...newDialogs);
-                            // 更新susu007的nextAuthor指向新对话
-                            if (data.fromMe[6]) {
-                                data.fromMe[6].responses[0].nextAuthor = ['susu009'];
-                            }
-                            
+                            // 直接使用susu-dialog.json中的数据，不添加额外内容
                             _this.dialogData.susu = data;
                             _this.isInitialized = true;
                             _this.appendDialog('susu001');
@@ -1102,7 +1007,10 @@
 
                     return this.delay(0).then(function () {
                         if (msg.isImg) {
-                            return _this.onImageLoad($('#mock-msg img'));
+                            // 立即返回，不等待图片加载完成
+                            // 这样可以避免在移动设备上因图片加载慢而导致的卡顿
+                            _this.onImageLoad($('#mock-msg img'));
+                            return Promise.resolve();
                         }
                     });
                 },
@@ -1135,19 +1043,37 @@
                 },
                 onImageLoad: function($img) {
                     return new Promise(function(resolve) {
-                        $img.one('load', resolve).each(function(index, target) {
-                            // 为图片添加错误处理，当图片加载失败时显示默认占位符
-                            $(target).on('error', function() {
-                                console.log('图片加载失败:', this.src);
-                                // 可以设置一个默认的错误图片
-                                // this.src = 'img/default.jpg';
-                            });
+                        // 为每个图片元素单独处理
+                        $img.each(function(index, target) {
                             // 添加缓存控制参数，强制刷新图片
                             if (target.src && !target.src.includes('?v=')) {
                                 target.src = target.src + '?v=' + new Date().getTime();
                             }
-                            target.complete && $(target).trigger('load');
+                            
+                            // 为图片添加错误处理，当图片加载失败时显示默认占位符
+                            $(target).on('error', function() {
+                                console.log('图片加载失败:', this.src);
+                                // 设置一个默认的错误图片，避免一直显示加载状态
+                                this.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNlZmVmZmYiLz48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0MCIgZmlsbD0iI2RkZGRkZCIvPjxwYXRoIGQ9Ik01MCAyMCBMNzAgNTAiIGZpbGw9IiM3NzciLz48cGF0aCBkPSJNNTAgMjAgTDMwIDUwIiBmaWxsPSIjNzc3Ii8+PHBhdGggZD0iTTUwIDIwIEw1MCA4MCIgZmlsbD0iIzc3NyIvPjwvc3ZnPg==';
+                                resolve(); // 加载失败时也resolve，避免卡住
+                            });
+                            
+                            // 绑定load事件
+                            $(target).one('load', resolve);
+                            
+                            // 确保图片加载完成
+                            if (target.complete) {
+                                $(target).trigger('load');
+                            } else {
+                                // 如果图片未完成加载，确保它开始加载
+                                target.src = target.src; // 重新设置src以触发加载
+                            }
                         });
+                        
+                        // 添加超时处理，避免图片加载卡住
+                        setTimeout(function() {
+                            resolve(); // 超时后强制resolve
+                        }, 5000); // 5秒超时
                     });
                 },
                 respond: function(response) {
